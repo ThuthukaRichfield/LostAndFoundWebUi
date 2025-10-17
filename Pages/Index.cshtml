@@ -1,0 +1,531 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Lost & Found Portal";
+}
+
+<div class="hero-section">
+    <div class="hero-container">
+        <h1 class="hero-title">University Lost & Found</h1>
+        <p class="hero-subtitle">Reconnect with your lost belongings through our secure campus system</p>
+        
+        <div class="hero-actions">
+            <a href="#" class="btn btn-primary btn-large">
+                <span>Report Lost Item</span>
+            </a>
+            <a href="#" class="btn btn-secondary btn-large">
+                <span>Report Found Item</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="main-container">
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">127</div>
+                <div class="stat-label">Items Recovered This Month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">89%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24h</div>
+                <div class="stat-label">Average Recovery Time</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Items Section -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Recently Reported Items</h2>
+            <div class="view-options">
+                <span class="view-filter active">All Items</span>
+                <span class="view-filter">Lost</span>
+                <span class="view-filter">Found</span>
+            </div>
+        </div>
+
+        <div class="items-grid">
+            <div class="item-card">
+                <div class="item-category lost">Lost</div>
+                <div class="item-icon">💻</div>
+                <h3 class="item-title">MacBook Pro</h3>
+                <p class="item-location">📍 Computer Lab, Science Building</p>
+                <p class="item-date">Reported 2 hours ago</p>
+                <div class="item-actions">
+                    <button class="btn btn-outline">View Details</button>
+                    <button class="btn btn-primary">I Found This</button>
+                </div>
+            </div>
+
+            <div class="item-card">
+                <div class="item-category found">Found</div>
+                <div class="item-icon">📱</div>
+                <h3 class="item-title">iPhone 15</h3>
+                <p class="item-location">📍 Library Study Area</p>
+                <p class="item-date">Found 5 hours ago</p>
+                <div class="item-actions">
+                    <button class="btn btn-outline">View Details</button>
+                    <button class="btn btn-primary">Claim Item</button>
+                </div>
+            </div>
+
+            <div class="item-card">
+                <div class="item-category lost">Lost</div>
+                <div class="item-icon">🎒</div>
+                <h3 class="item-title">Black Backpack</h3>
+                <p class="item-location">📍 Student Center</p>
+                <p class="item-date">Reported 1 day ago</p>
+                <div class="item-actions">
+                    <button class="btn btn-outline">View Details</button>
+                    <button class="btn btn-primary">I Found This</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Access Section -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Quick Access</h2>
+        </div>
+        
+        <div class="access-grid">
+            <div class="access-card">
+                <div class="access-icon">🎓</div>
+                <h3>Student Portal</h3>
+                <p>Access your lost item reports and claims</p>
+                <a href="/Student/Login" class="btn btn-primary">Student Login</a>
+            </div>
+            
+            <div class="access-card">
+                <div class="access-icon">👨‍🏫</div>
+                <h3>Staff Portal</h3>
+                <p>Manage found items and system administration</p>
+                <a href="/Admin/Login" class="btn btn-secondary">Staff Login</a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    /* ====== MODERN CSS RESET ====== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        line-height: 1.6;
+        color: #1a202c;
+        background-color: #f8fafc;
+    }
+
+    /* ====== LAYOUT COMPONENTS ====== */
+    .site-wrapper {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .site-main {
+        flex: 1;
+    }
+
+    /* ====== NAVBAR ====== */
+    .navbar {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .nav-brand {
+        text-align: center;
+    }
+
+    .brand-main {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e40af;
+        margin-bottom: 0.25rem;
+    }
+
+    .brand-subtitle {
+        font-size: 0.875rem;
+        color: #64748b;
+        font-weight: 400;
+    }
+
+    /* ====== HERO SECTION ====== */
+    .hero-section {
+        background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+        color: white;
+        padding: 4rem 0;
+        text-align: center;
+    }
+
+    .hero-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        line-height: 1.1;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        opacity: 0.9;
+        margin-bottom: 2.5rem;
+        font-weight: 300;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* ====== BUTTONS ====== */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        font-size: 0.875rem;
+    }
+
+    .btn-large {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        background: #ffffff;
+        color: #1e40af;
+    }
+
+        .btn-primary:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        backdrop-filter: blur(10px);
+    }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+    .btn-outline {
+        background: transparent;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+    }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+    /* ====== MAIN CONTAINER ====== */
+    .main-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    /* ====== STATS SECTION ====== */
+    .stats-section {
+        margin: -2rem auto 3rem auto;
+        max-width: 1000px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        text-align: center;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid #f1f5f9;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1e40af;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    /* ====== SECTIONS ====== */
+    .section {
+        margin: 4rem 0;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+        .section-header h2 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+    .view-options {
+        display: flex;
+        gap: 0.5rem;
+        background: #f1f5f9;
+        padding: 0.25rem;
+        border-radius: 0.5rem;
+    }
+
+    .view-filter {
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .view-filter.active {
+            background: white;
+            color: #1e40af;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+    /* ====== ITEMS GRID ====== */
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .item-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 1px solid #f1f5f9;
+        transition: all 0.2s ease;
+    }
+
+        .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.1);
+            border-color: #e2e8f0;
+        }
+
+    .item-category {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+        .item-category.lost {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .item-category.found {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+    .item-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .item-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+
+    .item-location, .item-date {
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .item-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+    }
+
+        .item-actions .btn {
+            flex: 1;
+            padding: 0.5rem 1rem;
+        }
+
+    /* ====== ACCESS GRID ====== */
+    .access-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .access-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        text-align: center;
+        border: 1px solid #f1f5f9;
+        transition: all 0.2s ease;
+    }
+
+        .access-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.1);
+        }
+
+    .access-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .access-card h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+    }
+
+    .access-card p {
+        color: #64748b;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+    }
+
+    /* ====== FOOTER ====== */
+    .site-footer {
+        background: #1e293b;
+        color: white;
+        margin-top: 4rem;
+    }
+
+    .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-copyright {
+        color: #94a3b8;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 1.5rem;
+    }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+            .footer-links a:hover {
+                color: #e2e8f0;
+            }
+
+    /* ====== RESPONSIVE DESIGN ====== */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+        }
+
+        .hero-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .items-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .item-actions {
+            flex-direction: column;
+        }
+
+        .footer-content {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
