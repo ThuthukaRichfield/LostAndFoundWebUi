@@ -9,41 +9,196 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@title</title>
     <link rel="stylesheet" href="~/css/site.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #e4ecf7);
+            margin: 0;
+            color: #222;
+        }
+
+        .site-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .site-header {
+            background: #1e3a8a;
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-brand {
+            text-align: left;
+        }
+
+        .brand-main {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .brand-subtitle {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            margin-left: 1.2rem;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        /* Main Content */
+        .site-main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 3rem 1rem;
+        }
+
+        .content-container {
+            background: white;
+            width: 100%;
+            max-width: 1100px;
+            padding: 2rem 3rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: #e0e7ff;
+            transform: translateY(-4px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+
+        .stat-label {
+            color: #475569;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #1e3a8a;
+            color: white;
+            padding: 1.2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 0 2rem;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-left: 1rem;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <div class="site-wrapper">
         <header class="site-header">
             <nav class="navbar">
-                <div class="nav-container">
-                    <div class="nav-brand">
-                        <div class="brand-main">University Lost & Found</div>
-                        <div class="brand-subtitle">Student & Lecturer Portal</div>
-                    </div>
+                <div class="nav-brand">
+                    <div class="brand-main">University Lost & Found</div>
+                    <div class="brand-subtitle">Student & Lecturer Portal</div>
+                </div>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/Items">Items</a>
+                    <a href="/Report">Report Lost</a>
+                    <a href="/Found">Report Found</a>
+                    <a href="/Account/Login">Login</a>
                 </div>
             </nav>
         </header>
 
         <main class="site-main">
-            @RenderBody()
+            <div class="content-container">
+                @RenderBody()
+
+                <section class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value">128</div>
+                        <div class="stat-label">Items Found</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">45</div>
+                        <div class="stat-label">Items Returned</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Pending Claims</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">89%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </section>
+            </div>
         </main>
 
         <footer class="site-footer">
             <div class="footer-container">
-                <div class="footer-content">
-                    <div class="footer-copyright">
-                        © @DateTime.Now.Year University Lost & Found System
-                    </div>
-                    <div class="footer-links">
-                        <a href="#">Privacy</a>
-                        <a href="#">Terms</a>
-                        <a href="#">Contact</a>
-                    </div>
+                <div>© @DateTime.Now.Year University Lost & Found System</div>
+                <div class="footer-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Contact</a>
                 </div>
             </div>
         </footer>
     </div>
-
-    <script src="~/js/site.js"></script>
 </body>
 </html>

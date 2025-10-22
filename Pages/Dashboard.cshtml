@@ -1,0 +1,119 @@
+@page
+@model LostAndFoundWebUi.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Lost & Found - Dashboard";
+}
+
+<!-- Add welcome message -->
+<div style="background: #e0f2fe; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+    <h2 style="margin: 0; color: #1e3a8a;">Welcome to Your Dashboard!</h2>
+    <p style="margin: 5px 0 0 0; color: #475569;">You are successfully logged in.</p>
+</div>
+
+<!-- Rest of your existing content -->
+
+<!-- ... rest of your existing HTML ... -->
+<h1>Welcome to Your Dashboard!</h1>
+
+<div class="menu">
+    <a href="#" class="active">All</a> ||
+    <a href="#">Lost items</a> ||
+    <a href="#">Found items</a> ||
+    <a href="#">My items</a>
+</div>
+
+<hr />
+
+<div class="items">
+    <div class="item lost">LOST: Blue hat</div>
+    <div class="item found">FOUND: Notebook</div>
+    <div class="item lost">LOST: Red jacket</div>
+</div>
+
+<div class="pagination">
+    <button>1</button>
+    <button>2</button>
+    <button>3</button>
+    <button>4</button>
+</div>
+
+<div class="bottom-buttons">
+    <button class="report-lost">Report lost item</button>
+    <button class="report-found">Report found item</button>
+</div>
+
+<style>
+    .menu {
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+
+    .menu a {
+        text-decoration: none;
+        color: #333;
+        font-size: 1rem;
+    }
+
+    .menu a.active {
+        text-decoration: underline;
+    }
+
+    .items {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .item {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 15px;
+        background-color: #fefefe;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .item.lost {
+        border-left: 6px solid #ef4444;
+    }
+
+    .item.found {
+        border-left: 6px solid #10b981;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+    }
+
+    .pagination button {
+        background-color: #fde68a;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .bottom-buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .report-lost, .report-found {
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .report-lost:hover, .report-found:hover {
+        background-color: #2563eb;
+    }
+</style>
