@@ -1,0 +1,178 @@
+@page
+@model LostAndFoundWebUi.Pages.MyItemsModel
+@{
+    ViewData["Title"] = "My Items";
+}
+
+<div class="container">
+    <h1>My Items</h1>
+    <p>Items you've reported as lost or found</p>
+
+    <div class="tabs">
+        <button class="tab-button active" onclick="showTab('lost')">My Lost Items</button>
+        <button class="tab-button" onclick="showTab('found')">My Found Items</button>
+        <button class="tab-button" onclick="showTab('claimed')">Claimed Items</button>
+    </div>
+
+    <div id="lost-tab" class="tab-content active">
+        <h3>Items I've Reported Lost</h3>
+        <div class="items-list">
+            <div class="my-item lost">
+                <img src="https://via.placeholder.com/100x80/ffebee/ef4444?text=Keys" alt="Keys">
+                <div class="item-info">
+                    <h4>Car Keys</h4>
+                    <p>Lost near student center</p>
+                    <small>Reported: 2 days ago • Status: Searching</small>
+                </div>
+                <button class="edit-btn">Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="found-tab" class="tab-content">
+        <h3>Items I've Reported Found</h3>
+        <div class="items-list">
+            <div class="my-item found">
+                <img src="https://via.placeholder.com/100x80/d1fae5/10b981?text=Book" alt="Book">
+                <div class="item-info">
+                    <h4>Chemistry Textbook</h4>
+                    <p>Found in library</p>
+                    <small>Reported: 1 day ago • Status: Unclaimed</small>
+                </div>
+                <button class="edit-btn">Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="claimed-tab" class="tab-content">
+        <h3>Items I've Claimed</h3>
+        <div class="items-list">
+            <div class="my-item claimed">
+                <img src="https://via.placeholder.com/100x80/dbeafe/3b82f6?text=Phone" alt="Phone">
+                <div class="item-info">
+                    <h4>Smartphone</h4>
+                    <p>Claimed from lost and found</p>
+                    <small>Claimed: 1 week ago • Status: Returned</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .tabs {
+        display: flex;
+        margin: 20px 0;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .tab-button {
+        padding: 10px 20px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        margin-right: 10px;
+    }
+
+    .tab-button.active {
+        border-bottom-color: #3b82f6;
+        color: #3b82f6;
+        font-weight: bold;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .items-list {
+        margin-top: 20px;
+    }
+
+    .my-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        background: white;
+    }
+
+    .my-item img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 15px;
+    }
+
+    .item-info {
+        flex: 1;
+    }
+
+    .item-info h4 {
+        margin: 0 0 5px 0;
+        color: #1e3a8a;
+    }
+
+    .item-info p {
+        margin: 0 0 5px 0;
+        color: #555;
+    }
+
+    .item-info small {
+        color: #888;
+    }
+
+    .edit-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .my-item.lost {
+        border-left: 4px solid #ef4444;
+    }
+
+    .my-item.found {
+        border-left: 4px solid #10b981;
+    }
+
+    .my-item.claimed {
+        border-left: 4px solid #3b82f6;
+    }
+</style>
+
+<script>
+    function showTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Remove active class from all buttons
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active');
+        });
+        
+        // Show selected tab
+        document.getElementById(tabName + '-tab').classList.add('active');
+        
+        // Activate selected button
+        event.currentTarget.classList.add('active');
+    }
+</script>

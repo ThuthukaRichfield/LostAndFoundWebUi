@@ -1,0 +1,326 @@
+@page
+@model LostAndFoundWebUi.Pages.AdminClaimsModel
+@{
+    ViewData["Title"] = "Manage Claims";
+}
+
+<div class="container">
+    <h1>Manage Claims</h1>
+    <p>Review and manage all item claims</p>
+
+    <!-- Filter Options -->
+    <div class="filter-section">
+        <div class="filter-group">
+            <label>Status:</label>
+            <select id="statusFilter" onchange="filterClaims()">
+                <option value="all">All Claims</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Item Type:</label>
+            <select id="typeFilter" onchange="filterClaims()">
+                <option value="all">All Types</option>
+                <option value="lost">Lost Items</option>
+                <option value="found">Found Items</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Claims List -->
+    <div class="claims-list">
+        <div class="claim-item pending" data-status="pending" data-type="lost">
+            <div class="claim-header">
+                <h3>Blue Baseball Cap</h3>
+                <span class="status-badge pending">Pending</span>
+            </div>
+            <div class="claim-details">
+                <div class="detail-row">
+                    <div class="detail-col">
+                        <strong>Claimant:</strong> Alice Johnson<br>
+                        <strong>Contact:</strong> alice@richfield.co.za<br>
+                        <strong>Submitted:</strong> Jan 16, 2024
+                    </div>
+                    <div class="detail-col">
+                        <strong>Item Type:</strong> Lost<br>
+                        <strong>Location:</strong> Library<br>
+                        <strong>Date Lost:</strong> Jan 15, 2024
+                    </div>
+                </div>
+                <div class="claim-reason">
+                    <strong>Claim Reason:</strong> I lost this cap last week near the library. It has my name written inside.
+                </div>
+                <div class="claim-evidence">
+                    <strong>Supporting Evidence:</strong> 2 images uploaded
+                </div>
+            </div>
+            <div class="claim-actions">
+                <button class="btn-approve" onclick="updateClaimStatus(this, 'approved')">Approve</button>
+                <button class="btn-reject" onclick="updateClaimStatus(this, 'rejected')">Reject</button>
+                <button class="btn-view-details" onclick="viewClaimDetails(1)">View Details</button>
+            </div>
+        </div>
+
+        <div class="claim-item pending" data-status="pending" data-type="found">
+            <div class="claim-header">
+                <h3>Notebook</h3>
+                <span class="status-badge pending">Pending</span>
+            </div>
+            <div class="claim-details">
+                <div class="detail-row">
+                    <div class="detail-col">
+                        <strong>Claimant:</strong> Bob Smith<br>
+                        <strong>Contact:</strong> bob@richfield.co.za<br>
+                        <strong>Submitted:</strong> Jan 17, 2024
+                    </div>
+                    <div class="detail-col">
+                        <strong>Item Type:</strong> Found<br>
+                        <strong>Location:</strong> Cafeteria<br>
+                        <strong>Date Found:</strong> Jan 14, 2024
+                    </div>
+                </div>
+                <div class="claim-reason">
+                    <strong>Claim Reason:</strong> This is my physics notebook. It has my name on the cover and class notes from last week.
+                </div>
+                <div class="claim-evidence">
+                    <strong>Supporting Evidence:</strong> 1 image uploaded
+                </div>
+            </div>
+            <div class="claim-actions">
+                <button class="btn-approve" onclick="updateClaimStatus(this, 'approved')">Approve</button>
+                <button class="btn-reject" onclick="updateClaimStatus(this, 'rejected')">Reject</button>
+                <button class="btn-view-details" onclick="viewClaimDetails(2)">View Details</button>
+            </div>
+        </div>
+
+        <div class="claim-item approved" data-status="approved" data-type="lost">
+            <div class="claim-header">
+                <h3>Red Jacket</h3>
+                <span class="status-badge approved">Approved</span>
+            </div>
+            <div class="claim-details">
+                <div class="detail-row">
+                    <div class="detail-col">
+                        <strong>Claimant:</strong> Sarah Wilson<br>
+                        <strong>Contact:</strong> sarah@richfield.co.za<br>
+                        <strong>Approved:</strong> Jan 10, 2024
+                    </div>
+                    <div class="detail-col">
+                        <strong>Item Type:</strong> Lost<br>
+                        <strong>Location:</strong> Parking Lot<br>
+                        <strong>Date Lost:</strong> Jan 8, 2024
+                    </div>
+                </div>
+                <div class="claim-reason">
+                    <strong>Claim Reason:</strong> This is my jacket. I have the purchase receipt and photos of me wearing it.
+                </div>
+            </div>
+            <div class="claim-actions">
+                <button class="btn-view-details" onclick="viewClaimDetails(3)">View Details</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .filter-section {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 8px;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .filter-group label {
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .filter-group select {
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background: white;
+    }
+
+    .claims-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .claim-item {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        border-left: 4px solid #6b7280;
+    }
+
+    .claim-item.pending {
+        border-left-color: #f59e0b;
+    }
+
+    .claim-item.approved {
+        border-left-color: #10b981;
+    }
+
+    .claim-item.rejected {
+        border-left-color: #ef4444;
+    }
+
+    .claim-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .claim-header h3 {
+        margin: 0;
+        color: #1e3a8a;
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .status-badge.pending {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    .status-badge.approved {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-badge.rejected {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .claim-details {
+        margin-bottom: 15px;
+    }
+
+    .detail-row {
+        display: flex;
+        gap: 40px;
+        margin-bottom: 15px;
+    }
+
+    .detail-col {
+        flex: 1;
+    }
+
+    .claim-reason, .claim-evidence {
+        margin: 10px 0;
+        padding: 10px;
+        background: #f8fafc;
+        border-radius: 5px;
+    }
+
+    .claim-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-approve {
+        background: #10b981;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .btn-reject {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .btn-view-details {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+</style>
+
+<script>
+    function filterClaims() {
+        const statusFilter = document.getElementById('statusFilter').value;
+        const typeFilter = document.getElementById('typeFilter').value;
+        const claims = document.querySelectorAll('.claim-item');
+
+        claims.forEach(claim => {
+            const status = claim.getAttribute('data-status');
+            const type = claim.getAttribute('data-type');
+            
+            const statusMatch = statusFilter === 'all' || status === statusFilter;
+            const typeMatch = typeFilter === 'all' || type === typeFilter;
+            
+            if (statusMatch && typeMatch) {
+                claim.style.display = 'block';
+            } else {
+                claim.style.display = 'none';
+            }
+        });
+    }
+
+    function updateClaimStatus(button, newStatus) {
+        const claimItem = button.closest('.claim-item');
+        const statusBadge = claimItem.querySelector('.status-badge');
+        
+        // Update status badge
+        statusBadge.className = 'status-badge ' + newStatus;
+        statusBadge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+        
+        // Update data attribute
+        claimItem.setAttribute('data-status', newStatus);
+        
+        // Update border color
+        const colors = {
+            'pending': '#f59e0b',
+            'approved': '#10b981',
+            'rejected': '#ef4444'
+        };
+        claimItem.style.borderLeftColor = colors[newStatus];
+        
+        // Show confirmation
+        alert(`Claim ${newStatus} successfully!`);
+    }
+
+    function viewClaimDetails(claimId) {
+        // In a real app, this would navigate to a detailed view
+        alert(`Viewing details for claim #${claimId}`);
+    }
+</script>

@@ -4,30 +4,56 @@
     ViewData["Title"] = "Lost & Found - Dashboard";
 }
 
-<!-- Add welcome message -->
-<div style="background: #e0f2fe; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-    <h2 style="margin: 0; color: #1e3a8a;">Welcome to Your Dashboard!</h2>
-    <p style="margin: 5px 0 0 0; color: #475569;">You are successfully logged in.</p>
+<!-- Welcome Message -->
+<div style="background: #e0f2fe; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #1e3a8a;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="margin: 0; color: #1e3a8a;">Welcome, @Model.DisplayName!</h2>
+            <p style="margin: 5px 0 0 0; color: #475569;">
+                Role: <strong>@Model.UserRole</strong> | 
+                Email: @Model.Username
+            </p>
+        </div>
+        <div>
+            <a href="/Logout" style="background: #ef4444; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none;">Logout</a>
+        </div>
+    </div>
 </div>
 
-<!-- Rest of your existing content -->
-
-<!-- ... rest of your existing HTML ... -->
-<h1>Welcome to Your Dashboard!</h1>
+<!-- Search Bar -->
+<div class="search-container">
+    <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search for items..." class="search-input">
+        <button class="search-btn">Search</button>
+    </div>
+</div>
 
 <div class="menu">
-    <a href="#" class="active">All</a> ||
-    <a href="#">Lost items</a> ||
-    <a href="#">Found items</a> ||
-    <a href="#">My items</a>
+    <a href="/Dashboard" class="active">All</a> ||
+    <a href="/LostItems">Lost items</a> ||
+    <a href="/FoundItems">Found items</a> ||
+    <a href="/MyItems">My items</a>
 </div>
 
 <hr />
 
 <div class="items">
-    <div class="item lost">LOST: Blue hat</div>
-    <div class="item found">FOUND: Notebook</div>
-    <div class="item lost">LOST: Red jacket</div>
+    <div class="item lost">
+        <strong>LOST: Blue hat</strong>
+        <p>Lost near library on Monday</p>
+        <small>Posted: 2 days ago</small>
+    </div>
+    <div class="item found">
+        <strong>FOUND: Notebook</strong>
+        <p>Found in cafeteria</p>
+        <small>Posted: 1 day ago</small>
+    </div>
+    <div class="item lost">
+        <strong>LOST: Red jacket</strong>
+        <p>Lost in parking lot</p>
+        <small>Posted: 3 hours ago</small>
+    </div>
 </div>
 
 <div class="pagination">
@@ -38,11 +64,48 @@
 </div>
 
 <div class="bottom-buttons">
-    <button class="report-lost">Report lost item</button>
-    <button class="report-found">Report found item</button>
+    <button class="report-lost" onclick="location.href='/ReportLost'">Report lost item</button>
+    <button class="report-found" onclick="location.href='/ReportFound'">Report found item</button>
 </div>
 
 <style>
+    .search-container {
+        margin-bottom: 20px;
+    }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        padding: 5px 15px;
+        background: white;
+        max-width: 500px;
+    }
+
+    .search-icon {
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+
+    .search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 8px 0;
+        font-size: 1rem;
+    }
+
+    .search-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
     .menu {
         margin-bottom: 20px;
         font-weight: 500;
@@ -52,10 +115,13 @@
         text-decoration: none;
         color: #333;
         font-size: 1rem;
+        margin: 0 10px;
     }
 
     .menu a.active {
         text-decoration: underline;
+        color: #1e3a8a;
+        font-weight: bold;
     }
 
     .items {
@@ -70,8 +136,8 @@
         border-radius: 10px;
         padding: 15px;
         background-color: #fefefe;
-        font-weight: bold;
         text-align: left;
+        cursor: pointer;
     }
 
     .item.lost {
@@ -101,16 +167,18 @@
     .bottom-buttons {
         display: flex;
         justify-content: space-between;
+        margin-top: 30px;
     }
 
     .report-lost, .report-found {
         background-color: #3b82f6;
         color: white;
         border: none;
-        padding: 10px 16px;
+        padding: 12px 20px;
         border-radius: 8px;
         cursor: pointer;
         font-weight: 500;
+        font-size: 1rem;
     }
 
     .report-lost:hover, .report-found:hover {

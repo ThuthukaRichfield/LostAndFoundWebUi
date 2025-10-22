@@ -1,0 +1,364 @@
+@page
+@model LostAndFoundWebUi.Pages.AdminStatsModel
+@{
+    ViewData["Title"] = "Statistics Dashboard";
+}
+
+<div class="container">
+    <h1>Statistics Dashboard</h1>
+    <p>Overview of Lost & Found system metrics</p>
+
+    <!-- Key Metrics -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-icon">📊</div>
+            <div class="metric-content">
+                <h3>Total Items</h3>
+                <div class="metric-value">47</div>
+                <div class="metric-change">+12% from last month</div>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon">🔍</div>
+            <div class="metric-content">
+                <h3>Lost Items</h3>
+                <div class="metric-value">28</div>
+                <div class="metric-change">+8% from last month</div>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon">✅</div>
+            <div class="metric-content">
+                <h3>Found Items</h3>
+                <div class="metric-value">19</div>
+                <div class="metric-change">+15% from last month</div>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon">🔄</div>
+            <div class="metric-content">
+                <h3>Return Rate</h3>
+                <div class="metric-value">42%</div>
+                <div class="metric-change">+5% from last month</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-grid">
+        <div class="chart-card">
+            <h3>Lost vs Found Items</h3>
+            <div class="chart-container">
+                <canvas id="lostFoundChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Lost Items by Category</h3>
+            <div class="chart-container">
+                <canvas id="categoryChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card full-width">
+            <h3>Items Reported Per Month</h3>
+            <div class="chart-container">
+                <canvas id="monthlyChart" width="600" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Breakdown -->
+    <div class="breakdown-section">
+        <h3>Category Breakdown</h3>
+        <div class="category-list">
+            <div class="category-item">
+                <span class="category-name">Electronics</span>
+                <div class="category-bar">
+                    <div class="category-fill" style="width: 30%; background: #3b82f6;"></div>
+                </div>
+                <span class="category-count">14 items (30%)</span>
+            </div>
+            <div class="category-item">
+                <span class="category-name">Clothing</span>
+                <div class="category-bar">
+                    <div class="category-fill" style="width: 25%; background: #ef4444;"></div>
+                </div>
+                <span class="category-count">12 items (25%)</span>
+            </div>
+            <div class="category-item">
+                <span class="category-name">Books</span>
+                <div class="category-bar">
+                    <div class="category-fill" style="width: 20%; background: #10b981;"></div>
+                </div>
+                <span class="category-count">9 items (20%)</span>
+            </div>
+            <div class="category-item">
+                <span class="category-name">Accessories</span>
+                <div class="category-bar">
+                    <div class="category-fill" style="width: 15%; background: #f59e0b;"></div>
+                </div>
+                <span class="category-count">7 items (15%)</span>
+            </div>
+            <div class="category-item">
+                <span class="category-name">Other</span>
+                <div class="category-bar">
+                    <div class="category-fill" style="width: 10%; background: #8b5cf6;"></div>
+                </div>
+                <span class="category-count">5 items (10%)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .metric-card {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .metric-icon {
+        font-size: 2.5rem;
+    }
+
+    .metric-content h3 {
+        margin: 0 0 5px 0;
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .metric-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #1e3a8a;
+        margin: 5px 0;
+    }
+
+    .metric-change {
+        font-size: 0.875rem;
+        color: #10b981;
+    }
+
+    .charts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin: 40px 0;
+    }
+
+    .chart-card {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .chart-card.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .chart-card h3 {
+        margin: 0 0 20px 0;
+        color: #1e3a8a;
+    }
+
+    .chart-container {
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .breakdown-section {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+
+    .breakdown-section h3 {
+        margin: 0 0 20px 0;
+        color: #1e3a8a;
+    }
+
+    .category-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .category-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .category-name {
+        width: 120px;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .category-bar {
+        flex: 1;
+        height: 20px;
+        background: #f3f4f6;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .category-fill {
+        height: 100%;
+        border-radius: 10px;
+    }
+
+    .category-count {
+        width: 100px;
+        text-align: right;
+        color: #6b7280;
+        font-size: 0.875rem;
+    }
+</style>
+
+<script>
+    // Simple chart implementation using canvas
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lost vs Found Chart
+        const lostFoundCtx = document.getElementById('lostFoundChart').getContext('2d');
+        drawBarChart(lostFoundCtx, ['Lost', 'Found'], [28, 19], ['#ef4444', '#10b981']);
+
+        // Category Chart
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        drawPieChart(categoryCtx, ['Electronics', 'Clothing', 'Books', 'Accessories', 'Other'], 
+                    [14, 12, 9, 7, 5], ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6']);
+
+        // Monthly Chart
+        const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+        drawLineChart(monthlyCtx, ['Sep', 'Oct', 'Nov', 'Dec', 'Jan'], 
+                     [8, 12, 15, 18, 22], [5, 8, 10, 12, 14]);
+    });
+
+    function drawBarChart(ctx, labels, data, colors) {
+        const maxValue = Math.max(...data);
+        const barWidth = 40;
+        const spacing = 30;
+        
+        // Draw bars
+        labels.forEach((label, index) => {
+            const x = index * (barWidth + spacing) + 50;
+            const barHeight = (data[index] / maxValue) * 150;
+            const y = 180 - barHeight;
+            
+            ctx.fillStyle = colors[index];
+            ctx.fillRect(x, y, barWidth, barHeight);
+            
+            // Label
+            ctx.fillStyle = '#374151';
+            ctx.font = '12px Arial';
+            ctx.fillText(label, x, 200);
+            ctx.fillText(data[index].toString(), x + 10, y - 5);
+        });
+    }
+
+    function drawPieChart(ctx, labels, data, colors) {
+        const total = data.reduce((sum, value) => sum + value, 0);
+        let startAngle = 0;
+        
+        data.forEach((value, index) => {
+            const sliceAngle = (value / total) * 2 * Math.PI;
+            
+            ctx.beginPath();
+            ctx.moveTo(100, 100);
+            ctx.arc(100, 100, 80, startAngle, startAngle + sliceAngle);
+            ctx.closePath();
+            
+            ctx.fillStyle = colors[index];
+            ctx.fill();
+            
+            startAngle += sliceAngle;
+        });
+    }
+
+    function drawLineChart(ctx, labels, lostData, foundData) {
+        const maxValue = Math.max(...lostData, ...foundData);
+        const width = 500;
+        const height = 180;
+        
+        // Draw grid
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 5; i++) {
+            const y = 20 + (i * 30);
+            ctx.beginPath();
+            ctx.moveTo(50, y);
+            ctx.lineTo(width - 20, y);
+            ctx.stroke();
+        }
+        
+        // Draw lost items line
+        drawLine(ctx, labels, lostData, maxValue, width, height, '#ef4444');
+        
+        // Draw found items line
+        drawLine(ctx, labels, foundData, maxValue, width, height, '#10b981');
+        
+        // Draw legend
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(width - 100, 20, 10, 10);
+        ctx.fillStyle = '#374151';
+        ctx.font = '12px Arial';
+        ctx.fillText('Lost Items', width - 85, 28);
+        
+        ctx.fillStyle = '#10b981';
+        ctx.fillRect(width - 100, 40, 10, 10);
+        ctx.fillStyle = '#374151';
+        ctx.fillText('Found Items', width - 85, 48);
+    }
+    
+    function drawLine(ctx, labels, data, maxValue, width, height, color) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        
+        labels.forEach((label, index) => {
+            const x = 50 + (index * (width - 70) / (labels.length - 1));
+            const y = 20 + (height - 40) * (1 - data[index] / maxValue);
+            
+            if (index === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+            
+            // Draw point
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, 2 * Math.PI);
+            ctx.fill();
+        });
+        
+        ctx.stroke();
+    }
+</script>

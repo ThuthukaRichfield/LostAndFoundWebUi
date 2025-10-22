@@ -1,0 +1,36 @@
+@page
+@model LostAndFoundWebUi.Pages.LogoutModel
+@{
+    ViewData["Title"] = "Logout";
+}
+
+<div class="logout-container">
+    <div class="logout-card">
+        <h2>Logging out...</h2>
+        <p>You are being signed out of the system.</p>
+    </div>
+</div>
+
+<script>
+    setTimeout(function() {
+        window.location.href = '/';
+    }, 2000);
+</script>
+
+<style>
+    .logout-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    
+    .logout-card {
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    h2 {
+        color: #1e3a8a;
+    }
+</style>

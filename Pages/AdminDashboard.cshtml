@@ -1,0 +1,213 @@
+@page
+@model LostAndFoundWebUi.Pages.AdminDashboardModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container">
+    <h1>Admin Dashboard</h1>
+    
+    <!-- Welcome Message -->
+    <div style="background: #e0f2fe; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #1e3a8a;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="margin: 0; color: #1e3a8a;">Welcome, @Model.DisplayName!</h2>
+                <p style="margin: 5px 0 0 0; color: #475569;">
+                    Role: <strong>@Model.UserRole</strong> | 
+                    Email: @Model.Username
+                </p>
+            </div>
+            <div>
+                <a href="/Logout" style="background: #ef4444; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none;">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Navigation -->
+    <div class="admin-nav">
+        <a href="/AdminDashboard" class="nav-item active">All Items</a>
+        <a href="/AdminLostItems" class="nav-item">Lost Items</a>
+        <a href="/AdminFoundItems" class="nav-item">Found Items</a>
+        <a href="/AdminClaims" class="nav-item">Claims</a>
+        <a href="/AdminStats" class="nav-item">Stats</a>
+        <a href="/AdminReports" class="nav-item">Reports</a>
+    </div>
+
+    <div class="search-container">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search all items..." class="search-input">
+            <button class="search-btn">Search</button>
+        </div>
+    </div>
+
+    <!-- Items Timeline -->
+    <div class="items-timeline">
+        <div class="timeline-item">
+            <div class="timeline-marker lost"></div>
+            <div class="timeline-content">
+                <h4>Blue Baseball Cap</h4>
+                <p><strong>Type:</strong> Lost | <strong>Location:</strong> Library | <strong>Date:</strong> Jan 15, 2024</p>
+                <p><strong>Claims:</strong> 2 pending claims</p>
+                <div class="timeline-actions">
+                    <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=1'">View Claims</button>
+                    <button class="btn-edit">Edit</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-marker found"></div>
+            <div class="timeline-content">
+                <h4>Notebook</h4>
+                <p><strong>Type:</strong> Found | <strong>Location:</strong> Cafeteria | <strong>Date:</strong> Jan 14, 2024</p>
+                <p><strong>Claims:</strong> 1 pending claim</p>
+                <div class="timeline-actions">
+                    <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=2'">View Claims</button>
+                    <button class="btn-edit">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .admin-nav {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    .nav-item {
+        padding: 10px 20px;
+        background: #f3f4f6;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #374151;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .nav-item.active {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .nav-item:hover {
+        background: #e5e7eb;
+    }
+
+    .nav-item.active:hover {
+        background: #2563eb;
+    }
+
+    .search-container {
+        margin-bottom: 30px;
+    }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        padding: 5px 15px;
+        background: white;
+        max-width: 500px;
+    }
+
+    .search-icon {
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+
+    .search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 8px 0;
+        font-size: 1rem;
+    }
+
+    .search-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    .items-timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .timeline-item {
+        display: flex;
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .timeline-marker {
+        width: 8px;
+        border-radius: 4px;
+        margin-right: 20px;
+    }
+
+    .timeline-marker.lost {
+        background: #ef4444;
+    }
+
+    .timeline-marker.found {
+        background: #10b981;
+    }
+
+    .timeline-content {
+        flex: 1;
+    }
+
+    .timeline-content h4 {
+        margin: 0 0 10px 0;
+        color: #1e3a8a;
+    }
+
+    .timeline-content p {
+        margin: 5px 0;
+        color: #6b7280;
+    }
+
+    .timeline-actions {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-view-claims {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background: #6b7280;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>

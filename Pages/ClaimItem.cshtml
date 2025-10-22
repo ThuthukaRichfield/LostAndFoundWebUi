@@ -1,0 +1,181 @@
+@page
+@model LostAndFoundWebUi.Pages.ClaimItemModel
+@{
+    ViewData["Title"] = "Claim Item";
+}
+
+<div class="container">
+    <h1>Claim Item</h1>
+    
+    <div class="item-details">
+        <h2>@Model.ItemName</h2>
+        <p><strong>Type:</strong> @Model.ItemType</p>
+        <p><strong>Location:</strong> @Model.Location</p>
+        <p><strong>Date:</strong> @Model.Date.ToString("MMM dd, yyyy")</p>
+        <p><strong>Description:</strong> @Model.Description</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="claim-form">
+        <div class="form-section">
+            <h3>Claim Information</h3>
+            
+            <div class="form-group">
+                <label asp-for="ClaimReason">Why do you believe this is your item? *</label>
+                <textarea asp-for="ClaimReason" class="form-control" rows="4" required placeholder="Please provide details about why you believe this item belongs to you..."></textarea>
+                <span asp-validation-for="ClaimReason" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ContactInfo">Contact Information *</label>
+                <input asp-for="ContactInfo" class="form-control" required placeholder="Phone number or additional email">
+                <span asp-validation-for="ContactInfo" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Supporting Evidence</h3>
+            
+            <div class="form-group">
+                <label asp-for="SupportingImages">Upload Supporting Images</label>
+                <input asp-for="SupportingImages" type="file" class="form-control" multiple accept="image/*">
+                <small class="text-muted">Upload photos that prove this item belongs to you (receipts, previous photos, etc.)</small>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AdditionalInfo">Additional Information</label>
+                <textarea asp-for="AdditionalInfo" class="form-control" rows="3" placeholder="Any additional information that might help verify your claim..."></textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Submit Claim</button>
+            <button type="button" class="btn-secondary" onclick="history.back()">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .item-details {
+        background: #f8fafc;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .item-details h2 {
+        color: #1e3a8a;
+        margin: 0 0 15px 0;
+    }
+
+    .item-details p {
+        margin: 8px 0;
+        color: #374151;
+    }
+
+    .claim-form {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-section {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .form-section h3 {
+        color: #1e3a8a;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #374151;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #3b82f6;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-end;
+        margin-top: 30px;
+    }
+
+    .btn-primary {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .btn-primary:hover {
+        background: #2563eb;
+    }
+
+    .btn-secondary {
+        background: #6b7280;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .btn-secondary:hover {
+        background: #4b5563;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .text-muted {
+        color: #6b7280;
+        font-size: 0.875rem;
+        margin-top: 5px;
+        display: block;
+    }
+</style>

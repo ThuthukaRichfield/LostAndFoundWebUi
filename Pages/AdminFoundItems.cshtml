@@ -1,0 +1,246 @@
+@page
+@model LostAndFoundWebUi.Pages.AdminFoundItemsModel
+@{
+    ViewData["Title"] = "Admin - Found Items";
+}
+
+<div class="container">
+    <h1>Found Items (Admin View)</h1>
+    <p>Admin management view for found items</p>
+
+    <!-- Admin Navigation -->
+    <div class="admin-nav">
+        <a href="/AdminDashboard" class="nav-item">All Items</a>
+        <a href="/AdminLostItems" class="nav-item">Lost Items</a>
+        <a href="/AdminFoundItems" class="nav-item active">Found Items</a>
+        <a href="/AdminClaims" class="nav-item">Claims</a>
+        <a href="/AdminStats" class="nav-item">Stats</a>
+        <a href="/AdminReports" class="nav-item">Reports</a>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="search-container">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search found items..." class="search-input">
+            <button class="search-btn">Search</button>
+        </div>
+    </div>
+
+    <!-- Found Items List -->
+    <div class="items-grid">
+        <div class="item-card">
+            <div class="item-image">
+                <img src="https://via.placeholder.com/200x150/d1fae5/10b981?text=Notebook" alt="Notebook">
+            </div>
+            <div class="item-details">
+                <h3>Black Notebook</h3>
+                <p><strong>Found:</strong> Cafeteria</p>
+                <p><strong>Date:</strong> 2024-01-15</p>
+                <p><strong>Description:</strong> Spiral notebook with physics notes</p>
+                <p><strong>Status:</strong> <span class="status-unclaimed">Unclaimed</span></p>
+                <p><strong>Claims:</strong> 1 pending</p>
+                <div class="item-actions">
+                    <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=1'">View Claims</button>
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="item-card">
+            <div class="item-image">
+                <img src="https://via.placeholder.com/200x150/d1fae5/10b981?text=Water+Bottle" alt="Water Bottle">
+            </div>
+            <div class="item-details">
+                <h3>Water Bottle</h3>
+                <p><strong>Found:</strong> Gym</p>
+                <p><strong>Date:</strong> 2024-01-14</p>
+                <p><strong>Description:</strong> Blue stainless steel bottle</p>
+                <p><strong>Status:</strong> <span class="status-claimed">Claimed</span></p>
+                <p><strong>Claims:</strong> 0 pending</p>
+                <div class="item-actions">
+                    <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=2'">View Claims</button>
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="item-card">
+            <div class="item-image">
+                <img src="https://via.placeholder.com/200x150/d1fae5/10b981?text=USB+Drive" alt="USB Drive">
+            </div>
+            <div class="item-details">
+                <h3>USB Drive</h3>
+                <p><strong>Found:</strong> Computer Lab</p>
+                <p><strong>Date:</strong> 2024-01-13</p>
+                <p><strong>Description:</strong> 32GB SanDisk USB drive</p>
+                <p><strong>Status:</strong> <span class="status-unclaimed">Unclaimed</span></p>
+                <p><strong>Claims:</strong> 0 pending</p>
+                <div class="item-actions">
+                    <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=3'">View Claims</button>
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .admin-nav {
+        display: flex;
+        gap: 10px;
+        margin: 30px 0;
+        flex-wrap: wrap;
+    }
+
+    .nav-item {
+        padding: 10px 20px;
+        background: #f3f4f6;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #374151;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .nav-item.active {
+        background: #10b981;
+        color: white;
+    }
+
+    .nav-item:hover {
+        background: #e5e7eb;
+    }
+
+    .nav-item.active:hover {
+        background: #059669;
+    }
+
+    .search-container {
+        margin: 20px 0;
+    }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        padding: 5px 15px;
+        background: white;
+        max-width: 500px;
+    }
+
+    .search-icon {
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+
+    .search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 8px 0;
+        font-size: 1rem;
+    }
+
+    .search-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .item-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .item-image img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .item-details {
+        padding: 15px;
+    }
+
+    .item-details h3 {
+        margin: 0 0 10px 0;
+        color: #1e3a8a;
+    }
+
+    .item-details p {
+        margin: 5px 0;
+        color: #555;
+    }
+
+    .status-unclaimed {
+        color: #f59e0b;
+        font-weight: bold;
+    }
+
+    .status-claimed {
+        color: #10b981;
+        font-weight: bold;
+    }
+
+    .item-actions {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-view-claims {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .btn-edit {
+        background: #f59e0b;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+</style>

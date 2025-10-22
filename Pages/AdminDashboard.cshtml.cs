@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LostAndFoundWebUi.Pages
 {
-    public class DashboardModel : PageModel
+    public class AdminDashboardModel : PageModel
     {
         public string Username { get; set; } = string.Empty;
         public string DisplayName { get; set; } = string.Empty;
@@ -11,16 +11,18 @@ namespace LostAndFoundWebUi.Pages
 
         public IActionResult OnGet()
         {
-            // Check if user is logged in
+            // Check if user is logged in AND is admin
             var isAuthenticated = HttpContext.Session.GetString("IsAuthenticated");
-            if (string.IsNullOrEmpty(isAuthenticated) || isAuthenticated != "true")
+            var userRole = HttpContext.Session.GetString("UserRole");
+            
+            if (string.IsNullOrEmpty(isAuthenticated) || isAuthenticated != "true" || userRole != "Admin")
             {
                 return RedirectToPage("/Index");
             }
             
-            Username = HttpContext.Session.GetString("Username") ?? "User";
-            DisplayName = HttpContext.Session.GetString("DisplayName") ?? "User";
-            UserRole = HttpContext.Session.GetString("UserRole") ?? "User";
+            Username = HttpContext.Session.GetString("Username") ?? "Admin";
+            DisplayName = HttpContext.Session.GetString("DisplayName") ?? "Administrator";
+            UserRole = "Admin";
             
             return Page();
         }

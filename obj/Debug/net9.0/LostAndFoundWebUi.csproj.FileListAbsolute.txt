@@ -1,3 +1,10 @@
+C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.staticwebassets.runtime.json
+C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.staticwebassets.endpoints.json
+C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.exe
+C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.deps.json
+C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.runtimeconfig.json
+C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.dll
+C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.pdb
 C:\Users\Monica\LostAndFoundWebUi\obj\Debug\net9.0\rpswa.dswa.cache.json
 C:\Users\Monica\LostAndFoundWebUi\obj\Debug\net9.0\LostAndFoundWebUi.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Monica\LostAndFoundWebUi\obj\Debug\net9.0\LostAndFoundWebUi.AssemblyInfoInputs.cache
@@ -7,13 +14,6 @@ C:\Users\Monica\LostAndFoundWebUi\obj\Debug\net9.0\LostAndFoundWebUi.MvcApplicat
 C:\Users\Monica\LostAndFoundWebUi\obj\Debug\net9.0\LostAndFoundWebUi.RazorAssemblyInfo.cache
 C:\Users\Monica\LostAndFoundWebUi\obj\Debug\net9.0\LostAndFoundWebUi.RazorAssemblyInfo.cs
 C:\Users\Monica\LostAndFoundWebUi\obj\Debug\net9.0\LostAndFoundWebUi.sourcelink.json
-C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.staticwebassets.runtime.json
-C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.staticwebassets.endpoints.json
-C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.exe
-C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.deps.json
-C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.runtimeconfig.json
-C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.dll
-C:\Users\Monica\LostAndFoundWebUi\bin\Debug\net9.0\LostAndFoundWebUi.pdb
 C:\Users\Monica\LostAndFoundWebUi\obj\Debug\net9.0\rjimswa.dswa.cache.json
 C:\Users\Monica\LostAndFoundWebUi\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 C:\Users\Monica\LostAndFoundWebUi\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json

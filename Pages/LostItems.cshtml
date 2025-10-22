@@ -1,0 +1,52 @@
+@page
+@model LostAndFoundWebUi.Pages.LostItemsModel
+@{
+    ViewData["Title"] = "Lost Items";
+}
+<!-- In the items-grid section, update the item cards: -->
+<div class="items-grid">
+    <div class="item-card" onclick="location.href='/ClaimItem?ItemId=1&ItemName=Blue Baseball Cap&ItemType=Lost&Location=Near Library&Date=2024-01-15&Description=Blue cap with school logo'">
+        <div class="item-image">
+            <img src="https://via.placeholder.com/200x150/ffebee/ef4444?text=Blue+Hat" alt="Blue Hat">
+        </div>
+        <div class="item-details">
+            <h3>Blue Baseball Cap</h3>
+            <p><strong>Lost:</strong> Near Library</p>
+            <p><strong>Date:</strong> 2024-01-15</p>
+            <p><strong>Description:</strong> Blue cap with school logo</p>
+            <div class="item-actions">
+                <button class="claim-btn" onclick="event.stopPropagation(); location.href='/ClaimItem?ItemId=1&ItemName=Blue Baseball Cap&ItemType=Lost&Location=Near Library&Date=2024-01-15&Description=Blue cap with school logo'">Claim Item</button>
+            </div>
+        </div>
+    </div>
+    <!-- Add more items... -->
+</div>
+
+<style>
+    .item-card {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .item-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .item-actions {
+        margin-top: 10px;
+    }
+
+    .claim-btn {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .claim-btn:hover {
+        background: #dc2626;
+    }
+</style>

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddRazorPages();
@@ -11,6 +9,9 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+// Add HttpContextAccessor
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -29,5 +30,3 @@ app.UseSession();
 app.MapRazorPages();
 
 app.Run();
-
-// Removed local WebApplication stub so the app uses the framework's WebApplication type.
