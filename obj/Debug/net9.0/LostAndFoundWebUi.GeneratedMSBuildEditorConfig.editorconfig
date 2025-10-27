@@ -28,14 +28,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5EYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Monica/LostAndFoundWebUi/Pages/AdminFoundItems.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5Gb3VuZEl0ZW1zLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Monica/LostAndFoundWebUi/Pages/AdminLostItems.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5Mb3N0SXRlbXMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Monica/LostAndFoundWebUi/Pages/AdminReports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5SZXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
