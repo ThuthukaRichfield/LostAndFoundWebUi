@@ -3,23 +3,35 @@
 @{
     ViewData["Title"] = "Lost Items";
 }
+
 <!-- In the items-grid section, update the item cards: -->
 <div class="items-grid">
-    <div class="item-card" onclick="location.href='/ClaimItem?ItemId=1&ItemName=Blue Baseball Cap&ItemType=Lost&Location=Near Library&Date=2024-01-15&Description=Blue cap with school logo'">
-        <div class="item-image">
-            <img src="https://via.placeholder.com/200x150/ffebee/ef4444?text=Blue+Hat" alt="Blue Hat">
-        </div>
-        <div class="item-details">
-            <h3>Blue Baseball Cap</h3>
-            <p><strong>Lost:</strong> Near Library</p>
-            <p><strong>Date:</strong> 2024-01-15</p>
-            <p><strong>Description:</strong> Blue cap with school logo</p>
-            <div class="item-actions">
-                <button class="claim-btn" onclick="event.stopPropagation(); location.href='/ClaimItem?ItemId=1&ItemName=Blue Baseball Cap&ItemType=Lost&Location=Near Library&Date=2024-01-15&Description=Blue cap with school logo'">Claim Item</button>
+
+    @foreach (var item in Model.LostItems)
+    {
+        // Construct the URL using the data from the item object
+        var claimUrl = $"/ClaimItem?ItemId={item.ItemId}&ItemName={item.Title}&ItemType=Lost&Location={item.Category}&Date={item.CreatedDate:yyyy-MM-dd}";
+
+        <div class="item-card" onclick="location.href='@claimUrl'">
+            <div class="item-image">
+                <img src="https://via.placeholder.com/200x150/ffebee/ef4444?text=@item.Title" alt="@item.Title">
+            </div>
+            <div class="item-details">
+                <h3>@item.Title</h3>
+                <p><strong>Category:</strong> @item.Category</p>
+                <p><strong>Date:</strong> @item.CreatedDate.ToShortDateString()</p>
+                <p><strong>Item ID:</strong> @item.ItemId</p>
+                <div class="item-actions">
+                    <button class="claim-btn" onclick="event.stopPropagation(); location.href='@claimUrl'">Claim Item</button>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- Add more items... -->
+    }
+
+    @if (!Model.LostItems.Any())
+    {
+        <p>No lost items found.</p>
+    }
 </div>
 
 <style>

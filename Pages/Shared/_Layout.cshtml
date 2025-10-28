@@ -8,6 +8,13 @@
     var userRole = session.GetString("UserRole");
     var username = session.GetString("Username");
     var displayName = session.GetString("DisplayName");
+    
+    // Get first letter for avatar
+    var avatarLetter = "U";
+    if (!string.IsNullOrEmpty(displayName))
+    {
+        avatarLetter = displayName[0].ToString().ToUpper();
+    }
 }
 <!doctype html>
 <html lang="en">
@@ -92,6 +99,26 @@
             color: #64748b;
         }
 
+        .user-avatar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .avatar-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
         /* Main Content */
         .site-main {
             flex: 1;
@@ -164,8 +191,11 @@
                         <a href="/ReportLost">Report Lost Item</a>
                         <a href="/ReportFound">Report Found Item</a>
                         
-                        <!-- Only show user name, no logout button -->
-                        <span style="color: #cbd5e1;">@displayName</span>
+                        <!-- User avatar and name -->
+                        <div class="user-avatar">
+                            <div class="avatar-circle">@avatarLetter</div>
+                            <span>@displayName</span>
+                        </div>
                     }
                     else
                     {

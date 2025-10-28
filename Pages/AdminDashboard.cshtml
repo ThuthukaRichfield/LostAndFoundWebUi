@@ -23,27 +23,26 @@
         </div>
     </div>
 
-    <!-- Admin Navigation -->
-    <div class="admin-nav">
-        <a href="/AdminDashboard" class="nav-item active">All Items</a>
-        <a href="/AdminLostItems" class="nav-item">Lost Items</a>
-        <a href="/AdminFoundItems" class="nav-item">Found Items</a>
-        <a href="/AdminClaims" class="nav-item">Claims</a>
-        <a href="/AdminStats" class="nav-item">Stats</a>
-        <a href="/AdminReports" class="nav-item">Reports</a>
+    <!-- Filter Menu for Admin -->
+    <div class="menu">
+        <a href="#" class="filter-link active" data-filter="all">All</a> ||
+        <a href="#" class="filter-link" data-filter="lost">Lost items</a> ||
+        <a href="#" class="filter-link" data-filter="found">Found items</a> ||
+        <a href="#" class="filter-link" data-filter="claims">Claims</a>
     </div>
 
     <div class="search-container">
         <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Search all items..." class="search-input">
-            <button class="search-btn">Search</button>
+            <input type="text" placeholder="Search all items..." class="search-input" id="searchInput">
+            <button class="search-btn" onclick="filterItems()">Search</button>
         </div>
     </div>
 
-    <!-- Items Timeline -->
-    <div class="items-timeline">
-        <div class="timeline-item">
+    <!-- Items Container -->
+    <div class="items-timeline" id="itemsContainer">
+        <!-- Lost Items -->
+        <div class="timeline-item" data-type="lost" data-status="active">
             <div class="timeline-marker lost"></div>
             <div class="timeline-content">
                 <h4>Blue Baseball Cap</h4>
@@ -56,7 +55,21 @@
             </div>
         </div>
 
-        <div class="timeline-item">
+        <div class="timeline-item" data-type="lost" data-status="active">
+            <div class="timeline-marker lost"></div>
+            <div class="timeline-content">
+                <h4>Red Jacket</h4>
+                <p><strong>Type:</strong> Lost | <strong>Location:</strong> Parking Lot | <strong>Date:</strong> Jan 14, 2024</p>
+                <p><strong>Claims:</strong> 1 pending claim</p>
+                <div class="timeline-actions">
+                    <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=3'">View Claims</button>
+                    <button class="btn-edit">Edit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Found Items -->
+        <div class="timeline-item" data-type="found" data-status="active">
             <div class="timeline-marker found"></div>
             <div class="timeline-content">
                 <h4>Notebook</h4>
@@ -65,6 +78,48 @@
                 <div class="timeline-actions">
                     <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=2'">View Claims</button>
                     <button class="btn-edit">Edit</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-item" data-type="found" data-status="resolved">
+            <div class="timeline-marker found"></div>
+            <div class="timeline-content">
+                <h4>Water Bottle</h4>
+                <p><strong>Type:</strong> Found | <strong>Location:</strong> Gym | <strong>Date:</strong> Jan 13, 2024</p>
+                <p><strong>Claims:</strong> 0 pending claims</p>
+                <div class="timeline-actions">
+                    <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=4'">View Claims</button>
+                    <button class="btn-edit">Edit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Claim Items (for Claims filter) -->
+        <div class="timeline-item claim-item" data-type="claim" data-status="pending">
+            <div class="timeline-marker claim"></div>
+            <div class="timeline-content">
+                <h4>Claim: Blue Baseball Cap</h4>
+                <p><strong>Claimant:</strong> Alice Johnson | <strong>Submitted:</strong> Jan 16, 2024</p>
+                <p><strong>Status:</strong> Pending Review</p>
+                <div class="timeline-actions">
+                    <button class="btn-view-claims" onclick="location.href='/AdminClaims'">Review Claim</button>
+                    <button class="btn-approve">Approve</button>
+                    <button class="btn-reject">Reject</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-item claim-item" data-type="claim" data-status="pending">
+            <div class="timeline-marker claim"></div>
+            <div class="timeline-content">
+                <h4>Claim: Notebook</h4>
+                <p><strong>Claimant:</strong> Bob Smith | <strong>Submitted:</strong> Jan 15, 2024</p>
+                <p><strong>Status:</strong> Pending Review</p>
+                <div class="timeline-actions">
+                    <button class="btn-view-claims" onclick="location.href='/AdminClaims'">Review Claim</button>
+                    <button class="btn-approve">Approve</button>
+                    <button class="btn-reject">Reject</button>
                 </div>
             </div>
         </div>
@@ -78,34 +133,23 @@
         padding: 20px;
     }
 
-    .admin-nav {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 30px;
-        flex-wrap: wrap;
-    }
-
-    .nav-item {
-        padding: 10px 20px;
-        background: #f3f4f6;
-        border-radius: 6px;
-        text-decoration: none;
-        color: #374151;
+    .menu {
+        margin-bottom: 20px;
         font-weight: 500;
-        transition: all 0.3s;
     }
 
-    .nav-item.active {
-        background: #3b82f6;
-        color: white;
+    .filter-link {
+        text-decoration: none;
+        color: #333;
+        font-size: 1rem;
+        margin: 0 10px;
+        cursor: pointer;
     }
 
-    .nav-item:hover {
-        background: #e5e7eb;
-    }
-
-    .nav-item.active:hover {
-        background: #2563eb;
+    .filter-link.active {
+        text-decoration: underline;
+        color: #1e3a8a;
+        font-weight: bold;
     }
 
     .search-container {
@@ -173,6 +217,10 @@
         background: #10b981;
     }
 
+    .timeline-marker.claim {
+        background: #f59e0b;
+    }
+
     .timeline-content {
         flex: 1;
     }
@@ -210,4 +258,91 @@
         border-radius: 5px;
         cursor: pointer;
     }
+
+    .btn-approve {
+        background: #10b981;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-reject {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 </style>
+
+<script>
+    // Filter items based on selection
+    function filterItems() {
+        const activeFilter = document.querySelector('.filter-link.active').getAttribute('data-filter');
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const items = document.querySelectorAll('.timeline-item');
+
+        items.forEach(item => {
+            const itemType = item.getAttribute('data-type');
+            const itemText = item.textContent.toLowerCase();
+            
+            let shouldShow = false;
+            
+            // Apply filter logic for admin
+            switch (activeFilter) {
+                case 'all':
+                    shouldShow = true;
+                    break;
+                case 'lost':
+                    shouldShow = itemType === 'lost';
+                    break;
+                case 'found':
+                    shouldShow = itemType === 'found';
+                    break;
+                case 'claims':
+                    shouldShow = itemType === 'claim';
+                    break;
+            }
+            
+            // Apply search filter
+            if (shouldShow && searchTerm) {
+                shouldShow = itemText.includes(searchTerm);
+            }
+            
+            // Show/hide item
+            item.style.display = shouldShow ? 'flex' : 'none';
+        });
+    }
+
+    // Initialize filter links
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterLinks = document.querySelectorAll('.filter-link');
+        
+        filterLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                filterLinks.forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Apply filter
+                filterItems();
+            });
+        });
+
+        // Add search input event listener
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', filterItems);
+        }
+        
+        // Apply initial filter
+        filterItems();
+    });
+</script>
