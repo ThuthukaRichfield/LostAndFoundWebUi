@@ -1,11 +1,13 @@
+from io import BytesIO
+from datetime import datetime, timedelta
 import streamlit as st
 import pandas as pd
 import numpy as np
-from io import BytesIO
-from datetime import datetime, timedelta
 
-st.set_page_config(page_title="Admin Reports",
-                   layout="centered", initial_sidebar_state="collapsed")
+import db_helper
+
+st.set_page_config(page_title="Admin Reports", layout="centered",
+                   initial_sidebar_state="collapsed")
 
 # css
 st.markdown(
@@ -27,7 +29,7 @@ st.markdown(
             background-color: #1e3a8a;
             color: white;
             width: 100%;
-            padding: 1rem 0;
+            padding: 1.15rem 0;
             margin: 0;
             position: fixed; /* keeps it pinned at top */
             top: 0;
@@ -101,7 +103,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 # html for header
 st.markdown("""
 <div class="custom-header">
@@ -121,73 +122,70 @@ st.markdown("""
 <div class="main-content">
 """, unsafe_allow_html=True)
 
+# main content
+st.title("Admin Reports")
+st.write("Select date range and type of report to pull")
 
-# generate random lost and found values
-def gen_ran_val(num_items: int = 300, year: int = datetime.now().year) -> pd.DataFrame:
-    rng = np.random.default_rng(seed=123)
-    categories = ["Electronics", "Clothing",
-                  "Personal", "Miscellaneous", "Stationery"]
-    statuses = ["Lost", "Found", "Claimed"]
-    rows = []
-    for i in range(1, num_items + 1):
-        month = rng.integers(1, min(12, datetime.now().month) + 1)
-        day = rng.integers(1, 28)
-        dt = datetime(year, month, int(day), rng.integers(8, 18), 0, 0)
-        status = rng.choice(statuses, p=[0.45, 0.45, 0.1])
-        category = rng.choice(categories)
-        rows.append({
-            "ItemID": i,
-            "UserID": rng.integers(1, 50),
-            "Title": f"Item {i}",
-            "Description": f"Mock description {i}",
-            "Category": category,
-            "Location": f"Location {rng.integers(1,10)}",
-            "DateTime": dt,
-            "Status": status
-        })
-    return pd.DataFrame(rows)
+today = datetime.now().date()
+default_start = today - timedelta(days=90)
+
+col1, col2 = st.columns(2)
+with col1:
+    start_date = st.date_input("Start date", value=default_start)
+with col2:
+    end_date = st.date_input("End date", value=today)
+
+report_type = st.selectbox("Type of report", options=[
+                           "All", "Lost", "Found", "Claims"], index=0)
 
 
-# generate random claims
-def gen_ran_claims(items_df: pd.DataFrame) -> pd.DataFrame:
-    rng = np.random.default_rng(seed=999)
-    claims = []
-    claimable_items = items_df.sample(frac=0.2, random_state=42)
-    claim_id = 1
-    for _, row in claimable_items.iterrows():
-        n_claims = rng.integers(0, 3)
-        for _ in range(n_claims):
-            status = rng.choice(
-                ["Pending", "Approved", "Rejected"], p=[0.5, 0.3, 0.2])
-            claims.append({
-                "ClaimID": claim_id,
-                "ItemID": row["ItemID"],
-                "UserID": rng.integers(1, 50),
-                "Status": status,
-                "CreatedBy": f"user{rng.integers(1,50)}",
-                "CreatedDate": row["DateTime"] + pd.Timedelta(days=int(rng.integers(0, 10))),
-                "Reason": "This is mine fr"
-            })
-            claim_id += 1
-    return pd.DataFrame(claims)
+# convert datetimes to include EOD
+start_dt = datetime.combine(start_date, datetime.min.time())
+end_dt = datetime.combine(end_date, datetime.max.time())
+
+# db queries fetching data
 
 
-# load fake data
 @st.cache_data(ttl=300)
-def load_data(real_db: bool = False):
-    if real_db:
-        raise NotImplementedError("put actual SQL queries here")
-    items = gen_ran_val()
-    claims = gen_ran_claims(items)
-    return items, claims
+def load_items(start_dt, end_dt):
+    # removed imagepath after datelost
+    sql = """
+    SELECT ItemId, UserId, Title, LostDescription, Category, Location, DateLost, Status, CreatedBy, CreatedDate
+    FROM Items
+    WHERE DateLost BETWEEN ? AND ?
+    ORDER BY DateLost DESC
+    """
+
+    return db_helper.query_to_df(sql, params=[start_dt, end_dt])
 
 
-# excel reporting
+@st.cache_data(ttl=300)
+def load_claims(start_dt, end_dt):
+    # removed status after userId
+    sql = """
+    SELECT ClaimId, ItemId, UserId, CreatedBy, CreatedDate, FoundDescription
+    FROM Claims
+    WHERE CreatedDate BETWEEN ? AND ?
+    ORDER BY CreatedDate DESC
+    """
+    fallback = pd.DataFrame()
+    return db_helper.query_to_df(sql, params=[start_dt, end_dt], fallback_df=fallback)
+
+
+# date ranges
+items_df = load_items(start_dt, end_dt)
+claims_df = load_claims(start_dt, end_dt)
+
+
+# convert dict of dfs to excel bytes
 def to_excel_bytes(dfs: dict) -> bytes:
     buffer = BytesIO()
+    # openpyxl
     with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
         for sheet_name, df in dfs.items():
             df_to_save = df.copy()
+
+            # convert datetimes to string
             for col in df_to_save.select_dtypes(include=["datetime64[ns]"]).columns:
                 df_to_save[col] = df_to_save[col].dt.strftime(
                     "%Y-%m-%d %H:%M:%S")
@@ -197,22 +195,19 @@ def to_excel_bytes(dfs: dict) -> bytes:
     return buffer.getvalue()
 
 
-# prep data
 def prep_export(report_type: str, items_filtered, claims_filtered):
-
-    # get dict of sheet_name put in df to export
     if report_type == "All":
         sheets = {
-            "Lost Items": items_filtered[items_filtered["Status"] == "Lost"].sort_values("DateTime"),
-            "Found Items": items_filtered[items_filtered["Status"] == "Found"].sort_values("DateTime"),
+            "Lost Items": items_filtered[items_filtered["Status"] == "Lost"].sort_values("DateLost"),
+            "Found Items": items_filtered[items_filtered["Status"] == "Found"].sort_values("DateLost"),
             "Claims": claims_filtered.sort_values("CreatedDate")
         }
     elif report_type == "Lost":
         sheets = {
-            "Lost Items": items_filtered[items_filtered["Status"] == "Lost"].sort_values("DateTime")}
+            "Lost Items": items_filtered[items_filtered["Status"] == "Lost"].sort_values("DateLost")}
     elif report_type == "Found":
         sheets = {
-            "Found Items": items_filtered[items_filtered["Status"] == "Found"].sort_values("DateTime")}
+            "Found Items": items_filtered[items_filtered["Status"] == "Found"].sort_values("DateLost")}
     elif report_type == "Claims":
         sheets = {"Claims": claims_filtered.sort_values("CreatedDate")}
     else:
@@ -220,49 +215,23 @@ def prep_export(report_type: str, items_filtered, claims_filtered):
     return sheets
 
 
-# UI
-st.subheader("Admin Reports")
-st.write("Select date range and type of report to pull")
+# already filtered
+items_filtered = items_df
+claims_filtered = claims_df
 
-# date picker
-today = datetime.now().date()
-default_start = today - timedelta(days=90)
-col1, col2 = st.columns(2)
-with col1:
-    start_date = st.date_input("Start date", value=default_start)
-with col2:
-    end_date = st.date_input("End date", value=today)
-
-# type of report box
-report_type = st.selectbox("Type of report", options=[
-                           "All", "Lost", "Found", "Claims"], index=0)
-
-
-# load fake data
-items_df, claims_df = load_data(real_db=False)
-
-# filter for date range dataframe for items and claims
-items_filtered = items_df[(items_df["DateTime"].dt.date >= start_date) & (
-    items_df["DateTime"].dt.date <= end_date)]
-claims_filtered = claims_df[(claims_df["CreatedDate"].dt.date >= start_date) & (
-    claims_df["CreatedDate"].dt.date <= end_date)]
-
-# make the file name todays date
 today_str = datetime.now().strftime("%Y-%m-%d")
-file_basename = f"LostAndFound_{report_type}_Report_{today_str}.xlsx"
+fin_file = f"LostAndFound_{report_type}_Report_{today_str}.xlsx"
 
-
-# generate button
 if st.button("Generate Report"):
     sheets = prep_export(report_type, items_filtered, claims_filtered)
-    if not any(len(df) > 0 for df in sheets.values()):
+    if not sheets or not any(len(df) > 0 for df in sheets.values()):
         st.warning("No data for selected type and date range.")
     else:
         excel_bytes = to_excel_bytes(sheets)
-        st.success(f"Prepared {file_basename} — click download below.")
+        st.success(f"Prepared {fin_file} — click download below.")
         st.download_button(
             label="Download Excel",
             data=excel_bytes,
-            file_name=file_basename,
+            file_name=fin_file,
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
