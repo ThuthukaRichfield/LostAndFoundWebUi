@@ -25,16 +25,17 @@
 
     <!-- Filter Menu for Admin -->
     <div class="menu">
-        <a href="#" class="filter-link active" data-filter="all">All</a> ||
-        <a href="#" class="filter-link" data-filter="lost">Lost items</a> ||
-        <a href="#" class="filter-link" data-filter="found">Found items</a> ||
-        <a href="#" class="filter-link" data-filter="claims">Claims</a>
+        <a href="#" class="filter-link active" data-filter="all">All Items</a> |
+        <a href="#" class="filter-link" data-filter="lost">Lost Items</a> |
+        <a href="#" class="filter-link" data-filter="found">Found Items</a> |
+        <a href="#" class="filter-link" data-filter="claims">Pending Claims</a> |
+        <a href="/Reports" class="filter-link" data-filter="reports">Reports</a>
     </div>
 
     <div class="search-container">
         <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Search all items..." class="search-input" id="searchInput">
+            <input type="text" placeholder="Search items, claimants, or locations..." class="search-input" id="searchInput">
             <button class="search-btn" onclick="filterItems()">Search</button>
         </div>
     </div>
@@ -45,12 +46,19 @@
         <div class="timeline-item" data-type="lost" data-status="active">
             <div class="timeline-marker lost"></div>
             <div class="timeline-content">
-                <h4>Blue Baseball Cap</h4>
-                <p><strong>Type:</strong> Lost | <strong>Location:</strong> Library | <strong>Date:</strong> Jan 15, 2024</p>
-                <p><strong>Claims:</strong> 2 pending claims</p>
+                <div class="item-header">
+                    <h4>Blue Baseball Cap</h4>
+                    <span class="status-badge searching">Searching</span>
+                </div>
+                <p><strong>Location:</strong> Library • <strong>Date:</strong> Jan 15, 2024</p>
+                <p><strong>Description:</strong> Blue cap with school logo, found near study tables</p>
+                <div class="item-meta">
+                    <span class="meta-item"><strong>Category:</strong> Clothing</span>
+                    <span class="meta-item"><strong>Reported by:</strong> John Smith</span>
+                    <span class="meta-item"><strong>Contact:</strong> john@school.edu</span>
+                </div>
                 <div class="timeline-actions">
-                    <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=1'">View Claims</button>
-                    <button class="btn-edit">Edit</button>
+                    <button class="btn-view-claims" onclick="viewClaims(1, 'Blue Baseball Cap')">View Claims (2)</button>
                 </div>
             </div>
         </div>
@@ -58,12 +66,19 @@
         <div class="timeline-item" data-type="lost" data-status="active">
             <div class="timeline-marker lost"></div>
             <div class="timeline-content">
-                <h4>Red Jacket</h4>
-                <p><strong>Type:</strong> Lost | <strong>Location:</strong> Parking Lot | <strong>Date:</strong> Jan 14, 2024</p>
-                <p><strong>Claims:</strong> 1 pending claim</p>
+                <div class="item-header">
+                    <h4>Red Jacket</h4>
+                    <span class="status-badge searching">Searching</span>
+                </div>
+                <p><strong>Location:</strong> Parking Lot • <strong>Date:</strong> Jan 14, 2024</p>
+                <p><strong>Description:</strong> Red winter jacket, size medium</p>
+                <div class="item-meta">
+                    <span class="meta-item"><strong>Category:</strong> Clothing</span>
+                    <span class="meta-item"><strong>Reported by:</strong> Sarah Johnson</span>
+                    <span class="meta-item"><strong>Contact:</strong> sarah@school.edu</span>
+                </div>
                 <div class="timeline-actions">
-                    <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=3'">View Claims</button>
-                    <button class="btn-edit">Edit</button>
+                    <button class="btn-view-claims" onclick="viewClaims(3, 'Red Jacket')">View Claims (1)</button>
                 </div>
             </div>
         </div>
@@ -72,12 +87,20 @@
         <div class="timeline-item" data-type="found" data-status="active">
             <div class="timeline-marker found"></div>
             <div class="timeline-content">
-                <h4>Notebook</h4>
-                <p><strong>Type:</strong> Found | <strong>Location:</strong> Cafeteria | <strong>Date:</strong> Jan 14, 2024</p>
-                <p><strong>Claims:</strong> 1 pending claim</p>
+                <div class="item-header">
+                    <h4>Chemistry Textbook</h4>
+                    <span class="status-badge unclaimed">Unclaimed</span>
+                </div>
+                <p><strong>Location:</strong> Cafeteria • <strong>Date:</strong> Jan 14, 2024</p>
+                <p><strong>Description:</strong> "Chemistry 101" textbook, slightly worn cover</p>
+                <div class="item-meta">
+                    <span class="meta-item"><strong>Category:</strong> Books</span>
+                    <span class="meta-item"><strong>Found by:</strong> Mike Davis</span>
+                    <span class="meta-item"><strong>Contact:</strong> mike@school.edu</span>
+                    <span class="meta-item"><strong>Storage:</strong> Library Lost & Found</span>
+                </div>
                 <div class="timeline-actions">
-                    <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=2'">View Claims</button>
-                    <button class="btn-edit">Edit</button>
+                    <button class="btn-view-claims" onclick="viewClaims(2, 'Chemistry Textbook')">View Claims (1)</button>
                 </div>
             </div>
         </div>
@@ -85,41 +108,98 @@
         <div class="timeline-item" data-type="found" data-status="resolved">
             <div class="timeline-marker found"></div>
             <div class="timeline-content">
-                <h4>Water Bottle</h4>
-                <p><strong>Type:</strong> Found | <strong>Location:</strong> Gym | <strong>Date:</strong> Jan 13, 2024</p>
-                <p><strong>Claims:</strong> 0 pending claims</p>
+                <div class="item-header">
+                    <h4>Water Bottle</h4>
+                    <span class="status-badge returned">Returned</span>
+                </div>
+                <p><strong>Location:</strong> Gym • <strong>Date:</strong> Jan 13, 2024</p>
+                <p><strong>Description:</strong> Metal water bottle, green color, school logo</p>
+                <div class="item-meta">
+                    <span class="meta-item"><strong>Category:</strong> Personal Items</span>
+                    <span class="meta-item"><strong>Found by:</strong> Emily Wilson</span>
+                    <span class="meta-item"><strong>Returned to:</strong> Tom Brown</span>
+                    <span class="meta-item"><strong>Return Date:</strong> Jan 16, 2024</span>
+                </div>
                 <div class="timeline-actions">
-                    <button class="btn-view-claims" onclick="location.href='/AdminItemClaims?itemId=4'">View Claims</button>
-                    <button class="btn-edit">Edit</button>
+                    <button class="btn-view-details" onclick="viewItemDetails(4)">View Details</button>
                 </div>
             </div>
         </div>
 
         <!-- Claim Items (for Claims filter) -->
-        <div class="timeline-item claim-item" data-type="claim" data-status="pending">
+        <div class="timeline-item claim-item" data-type="claim" data-status="pending" data-item-id="1">
             <div class="timeline-marker claim"></div>
             <div class="timeline-content">
-                <h4>Claim: Blue Baseball Cap</h4>
-                <p><strong>Claimant:</strong> Alice Johnson | <strong>Submitted:</strong> Jan 16, 2024</p>
-                <p><strong>Status:</strong> Pending Review</p>
+                <div class="item-header">
+                    <h4>Claim for Blue Baseball Cap</h4>
+                    <span class="status-badge pending">Pending</span>
+                </div>
+                <p><strong>Claimant:</strong> Alice Johnson • <strong>Submitted:</strong> Jan 16, 2024</p>
+                <p><strong>Item:</strong> Blue Baseball Cap (Lost Item #1)</p>
+                <div class="claim-details">
+                    <p><strong>Proof of Ownership:</strong> Provided photo with item</p>
+                    <p><strong>Description Match:</strong> 95%</p>
+                </div>
                 <div class="timeline-actions">
-                    <button class="btn-view-claims" onclick="location.href='/AdminClaims'">Review Claim</button>
-                    <button class="btn-approve">Approve</button>
-                    <button class="btn-reject">Reject</button>
+                    <button class="btn-review-claim" onclick="reviewClaim(101, 1)">Review Claim</button>
                 </div>
             </div>
         </div>
 
-        <div class="timeline-item claim-item" data-type="claim" data-status="pending">
+        <div class="timeline-item claim-item" data-type="claim" data-status="pending" data-item-id="2">
             <div class="timeline-marker claim"></div>
             <div class="timeline-content">
-                <h4>Claim: Notebook</h4>
-                <p><strong>Claimant:</strong> Bob Smith | <strong>Submitted:</strong> Jan 15, 2024</p>
-                <p><strong>Status:</strong> Pending Review</p>
+                <div class="item-header">
+                    <h4>Claim for Chemistry Textbook</h4>
+                    <span class="status-badge pending">Pending</span>
+                </div>
+                <p><strong>Claimant:</strong> Bob Smith • <strong>Submitted:</strong> Jan 15, 2024</p>
+                <p><strong>Item:</strong> Chemistry Textbook (Found Item #2)</p>
+                <div class="claim-details">
+                    <p><strong>Proof of Ownership:</strong> Student ID and purchase receipt</p>
+                    <p><strong>Description Match:</strong> 100%</p>
+                </div>
                 <div class="timeline-actions">
-                    <button class="btn-view-claims" onclick="location.href='/AdminClaims'">Review Claim</button>
-                    <button class="btn-approve">Approve</button>
-                    <button class="btn-reject">Reject</button>
+                    <button class="btn-review-claim" onclick="reviewClaim(102, 2)">Review Claim</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-item claim-item" data-type="claim" data-status="pending" data-item-id="3">
+            <div class="timeline-marker claim"></div>
+            <div class="timeline-content">
+                <div class="item-header">
+                    <h4>Claim for Red Jacket</h4>
+                    <span class="status-badge pending">Pending</span>
+                </div>
+                <p><strong>Claimant:</strong> David Wilson • <strong>Submitted:</strong> Jan 17, 2024</p>
+                <p><strong>Item:</strong> Red Jacket (Lost Item #3)</p>
+                <div class="claim-details">
+                    <p><strong>Proof of Ownership:</strong> Provided purchase receipt</p>
+                    <p><strong>Description Match:</strong> 90%</p>
+                </div>
+                <div class="timeline-actions">
+                    <button class="btn-review-claim" onclick="reviewClaim(103, 3)">Review Claim</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Successful Claims -->
+        <div class="timeline-item claim-item" data-type="claim" data-status="approved" data-item-id="4">
+            <div class="timeline-marker approved"></div>
+            <div class="timeline-content">
+                <div class="item-header">
+                    <h4>✓ Approved: Water Bottle Claim</h4>
+                    <span class="status-badge approved">Approved</span>
+                </div>
+                <p><strong>Claimant:</strong> Tom Brown • <strong>Approved:</strong> Jan 16, 2024</p>
+                <p><strong>Item:</strong> Water Bottle (Found Item #4)</p>
+                <div class="claim-details">
+                    <p><strong>Approved by:</strong> @Model.DisplayName</p>
+                    <p><strong>Return Method:</strong> In-person pickup</p>
+                </div>
+                <div class="timeline-actions">
+                    <button class="btn-view-details" onclick="viewSuccessfulClaim(401)">View Complete Details</button>
                 </div>
             </div>
         </div>
@@ -136,6 +216,10 @@
     .menu {
         margin-bottom: 20px;
         font-weight: 500;
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .filter-link {
@@ -144,11 +228,14 @@
         font-size: 1rem;
         margin: 0 10px;
         cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
     }
 
     .filter-link.active {
-        text-decoration: underline;
-        color: #1e3a8a;
+        background: #3b82f6;
+        color: white;
         font-weight: bold;
     }
 
@@ -164,6 +251,7 @@
         padding: 5px 15px;
         background: white;
         max-width: 500px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .search-icon {
@@ -187,6 +275,11 @@
         border-radius: 20px;
         cursor: pointer;
         margin-left: 10px;
+        transition: background 0.3s;
+    }
+
+    .search-btn:hover {
+        background: #2563eb;
     }
 
     .items-timeline {
@@ -201,6 +294,12 @@
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
     }
 
     .timeline-marker {
@@ -221,24 +320,97 @@
         background: #f59e0b;
     }
 
+    .timeline-marker.approved {
+        background: #10b981;
+    }
+
     .timeline-content {
         flex: 1;
     }
 
-    .timeline-content h4 {
-        margin: 0 0 10px 0;
+    .item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .item-header h4 {
+        margin: 0;
         color: #1e3a8a;
+        flex: 1;
+    }
+
+    .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .status-badge.searching {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    .status-badge.unclaimed {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .status-badge.returned {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-badge.pending {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    .status-badge.approved {
+        background: #d1fae5;
+        color: #065f46;
     }
 
     .timeline-content p {
         margin: 5px 0;
         color: #6b7280;
+        line-height: 1.4;
+    }
+
+    .item-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 10px 0;
+        padding: 10px 0;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .meta-item {
+        font-size: 0.85rem;
+        color: #555;
+    }
+
+    .claim-details {
+        background: #f8fafc;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+        border-left: 3px solid #e2e8f0;
+    }
+
+    .claim-details p {
+        margin: 3px 0;
+        font-size: 0.9rem;
     }
 
     .timeline-actions {
         margin-top: 15px;
         display: flex;
         gap: 10px;
+        flex-wrap: wrap;
     }
 
     .btn-view-claims {
@@ -248,33 +420,42 @@
         padding: 8px 16px;
         border-radius: 5px;
         cursor: pointer;
+        font-weight: 500;
+        transition: background 0.3s;
     }
 
-    .btn-edit {
-        background: #6b7280;
+    .btn-view-claims:hover {
+        background: #2563eb;
+    }
+
+    .btn-review-claim {
+        background: #f59e0b;
         color: white;
         border: none;
         padding: 8px 16px;
         border-radius: 5px;
         cursor: pointer;
+        font-weight: 500;
+        transition: background 0.3s;
     }
 
-    .btn-approve {
+    .btn-review-claim:hover {
+        background: #d97706;
+    }
+
+    .btn-view-details {
         background: #10b981;
         color: white;
         border: none;
         padding: 8px 16px;
         border-radius: 5px;
         cursor: pointer;
+        font-weight: 500;
+        transition: background 0.3s;
     }
 
-    .btn-reject {
-        background: #ef4444;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 5px;
-        cursor: pointer;
+    .btn-view-details:hover {
+        background: #059669;
     }
 </style>
 
@@ -305,6 +486,10 @@
                 case 'claims':
                     shouldShow = itemType === 'claim';
                     break;
+                case 'reports':
+                    // Reports will be handled by separate page
+                    shouldShow = false;
+                    break;
             }
             
             // Apply search filter
@@ -317,13 +502,60 @@
         });
     }
 
+    // View Claims function - filters to claims view and shows claims for specific item
+    function viewClaims(itemId, itemName) {
+        // Set claims filter as active
+        document.querySelectorAll('.filter-link').forEach(link => link.classList.remove('active'));
+        document.querySelector('.filter-link[data-filter="claims"]').classList.add('active');
+        
+        // Filter to show only claims for this specific item
+        const items = document.querySelectorAll('.timeline-item');
+        items.forEach(item => {
+            const itemType = item.getAttribute('data-type');
+            const claimItemId = item.getAttribute('data-item-id');
+            
+            if (itemType === 'claim' && claimItemId == itemId) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        // Update search placeholder to show we're filtering
+        document.getElementById('searchInput').placeholder = `Search in claims for ${itemName}...`;
+        document.getElementById('searchInput').value = '';
+    }
+
+    // Review Claim - redirect to claims review page
+    function reviewClaim(claimId, itemId) {
+        // In real application, this would redirect to the claim review page
+        window.location.href = `/AdminClaims?claimId=${claimId}&itemId=${itemId}`;
+    }
+
+    // View successful claims
+    function viewSuccessfulClaim(claimId) {
+        // In real application, this would show details of successful claim
+        alert(`Showing complete details for successfully processed claim #${claimId}`);
+        // window.location.href = `/ClaimDetails?claimId=${claimId}`;
+    }
+
+    // View item details
+    function viewItemDetails(itemId) {
+        // In real application, this would show full item details
+        alert(`Showing complete details for item #${itemId}`);
+        // window.location.href = `/ItemDetails?itemId=${itemId}`;
+    }
+
     // Initialize filter links
     document.addEventListener('DOMContentLoaded', function() {
         const filterLinks = document.querySelectorAll('.filter-link');
         
         filterLinks.forEach(link => {
             link.addEventListener('click', function(e) {
-                e.preventDefault();
+                // Don't prevent default for reports link since it should navigate
+                if (this.getAttribute('data-filter') !== 'reports') {
+                    e.preventDefault();
+                }
                 
                 // Remove active class from all links
                 filterLinks.forEach(l => l.classList.remove('active'));
@@ -331,8 +563,13 @@
                 // Add active class to clicked link
                 this.classList.add('active');
                 
-                // Apply filter
-                filterItems();
+                // Reset search placeholder for non-reports filters
+                if (this.getAttribute('data-filter') !== 'reports') {
+                    document.getElementById('searchInput').placeholder = 'Search all items...';
+                    
+                    // Apply filter
+                    filterItems();
+                }
             });
         });
 

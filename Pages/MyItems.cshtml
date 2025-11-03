@@ -23,8 +23,28 @@
                     <h4>Car Keys</h4>
                     <p>Lost near student center</p>
                     <small>Reported: 2 days ago • Status: Searching</small>
+                    <div class="item-details">
+                        <span class="detail-item"><strong>Location:</strong> Student Center</span>
+                        <span class="detail-item"><strong>Date Lost:</strong> Jan 18, 2024</span>
+                        <span class="detail-item"><strong>Category:</strong> Personal Items</span>
+                    </div>
                 </div>
-                <button class="edit-btn">Edit</button>
+            </div>
+            
+            <div class="my-item lost">
+                <img src="https://via.placeholder.com/100x80/ffebee/ef4444?text=Phone" alt="Phone">
+                <div class="item-info">
+                    <h4>Smartphone</h4>
+                    <p>Lost in library study area</p>
+                    <small>Reported: 5 days ago • Status: Searching</small>
+                    <div class="item-details">
+                        <span class="detail-item"><strong>Location:</strong> Library</span>
+                        <span class="detail-item"><strong>Date Lost:</strong> Jan 15, 2024</span>
+                        <span class="detail-item"><strong>Category:</strong> Electronics</span>
+                        <span class="detail-item"><strong>Color:</strong> Black</span>
+                        <span class="detail-item"><strong>Brand:</strong> Samsung</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -38,8 +58,31 @@
                     <h4>Chemistry Textbook</h4>
                     <p>Found in library</p>
                     <small>Reported: 1 day ago • Status: Unclaimed</small>
+                    <div class="item-details">
+                        <span class="detail-item"><strong>Location Found:</strong> Library - 2nd Floor</span>
+                        <span class="detail-item"><strong>Date Found:</strong> Jan 19, 2024</span>
+                        <span class="detail-item"><strong>Category:</strong> Books</span>
+                        <span class="detail-item"><strong>Condition:</strong> Like New</span>
+                        <span class="detail-item"><strong>Identifying Marks:</strong> Name written on inside cover</span>
+                    </div>
                 </div>
-                <button class="edit-btn">Edit</button>
+            </div>
+            
+            <div class="my-item found">
+                <img src="https://via.placeholder.com/100x80/d1fae5/10b981?text=Jacket" alt="Jacket">
+                <div class="item-info">
+                    <h4>Blue Jacket</h4>
+                    <p>Found in cafeteria</p>
+                    <small>Reported: 3 days ago • Status: Claimed</small>
+                    <div class="item-details">
+                        <span class="detail-item"><strong>Location Found:</strong> Cafeteria</span>
+                        <span class="detail-item"><strong>Date Found:</strong> Jan 17, 2024</span>
+                        <span class="detail-item"><strong>Category:</strong> Clothing</span>
+                        <span class="detail-item"><strong>Size:</strong> Medium</span>
+                        <span class="detail-item"><strong>Color:</strong> Navy Blue</span>
+                        <span class="detail-item"><strong>Brand:</strong> North Face</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -53,6 +96,27 @@
                     <h4>Smartphone</h4>
                     <p>Claimed from lost and found</p>
                     <small>Claimed: 1 week ago • Status: Returned</small>
+                    <div class="item-details">
+                        <span class="detail-item"><strong>Claim Date:</strong> Jan 12, 2024</span>
+                        <span class="detail-item"><strong>Claimed From:</strong> Campus Security</span>
+                        <span class="detail-item"><strong>Verification Required:</strong> Yes</span>
+                        <span class="detail-item"><strong>Return Method:</strong> In-person pickup</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="my-item claimed">
+                <img src="https://via.placeholder.com/100x80/dbeafe/3b82f6?text=Wallet" alt="Wallet">
+                <div class="item-info">
+                    <h4>Wallet</h4>
+                    <p>Claimed from security office</p>
+                    <small>Claimed: 2 weeks ago • Status: Returned</small>
+                    <div class="item-details">
+                        <span class="detail-item"><strong>Claim Date:</strong> Jan 5, 2024</span>
+                        <span class="detail-item"><strong>Claimed From:</strong> Security Office</span>
+                        <span class="detail-item"><strong>Verification Required:</strong> Yes</span>
+                        <span class="detail-item"><strong>Contents Verified:</strong> All items present</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -101,12 +165,18 @@
 
     .my-item {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         padding: 15px;
         border: 1px solid #e5e7eb;
         border-radius: 8px;
         margin-bottom: 10px;
         background: white;
+        transition: all 0.3s ease;
+    }
+
+    .my-item:hover {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transform: translateY(-1px);
     }
 
     .my-item img {
@@ -133,15 +203,25 @@
 
     .item-info small {
         color: #888;
+        display: block;
+        margin-bottom: 10px;
     }
 
-    .edit-btn {
-        background: #3b82f6;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 5px;
-        cursor: pointer;
+    .item-details {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .detail-item {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .detail-item strong {
+        color: #333;
     }
 
     .my-item.lost {
@@ -158,7 +238,8 @@
 </style>
 
 <script>
-    function showTab(tabName) {
+    // Make sure functions are globally available
+    window.showTab = function(tabName) {
         // Hide all tabs
         document.querySelectorAll('.tab-content').forEach(tab => {
             tab.classList.remove('active');
@@ -175,4 +256,9 @@
         // Activate selected button
         event.currentTarget.classList.add('active');
     }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('My Items page loaded - Read Only Version');
+    });
 </script>
