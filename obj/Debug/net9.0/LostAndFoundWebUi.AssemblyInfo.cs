@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LostAndFoundWebUi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+06d750f2c03c280e92a5461b59112e3c3006561b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f7439b15f7969a623f9a441a526982d86c86dac3")]
 [assembly: System.Reflection.AssemblyProductAttribute("LostAndFoundWebUi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LostAndFoundWebUi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -2,11 +2,13 @@
 
 using LostAndFoundWebUi.Models;
 using Microsoft.AspNetCore.Identity.Data;
+using System.Buffers;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using OperationStatus = LostAndFoundWebUi.Models.OperationStatus;
 // Assuming your models (DTOs) are accessible or copied here
 //using LostAndFoundWebUi.Models;
 
@@ -166,6 +168,31 @@ namespace LostAndFoundWebUi.Services
                 // Log the error
                 Console.WriteLine($"Error fetching items: {ex.Message}");
                 return new List<ItemDto>();
+            }
+        }
+
+        public async Task<OperationStatus> ReportLostItemAsync(ReportLostItemRequest request)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("Item/report-lost-item", request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Assuming OperationStatus is defined in your UI project
+                    var status = await response.Content.ReadFromJsonAsync<Models.OperationStatus>();
+                    return status ?? new OperationStatus();
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    return OperationStatus.CreateFromException($"API Error: {response.StatusCode}", new Exception(error));
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle network or serialization errors
+                return OperationStatus.CreateFromException("Network or serialization error occurred.", ex);
             }
         }
     }

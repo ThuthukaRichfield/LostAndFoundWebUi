@@ -8,10 +8,17 @@
     <h1>Report Lost Item</h1>
     <p>Fill out the form below to report a lost item</p>
 
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" style="color: #dc2626; border: 1px solid; padding: 15px; margin-bottom: 20px; background-color: #fef2f2; border-radius: 5px;">
+            <strong>Error!</strong> @Model.ErrorMessage
+        </div>
+    }
+
     <form method="post" enctype="multipart/form-data" class="report-form">
         <div class="form-section">
             <h3>Item Details</h3>
-            
+
             <div class="form-group">
                 <label asp-for="ItemName">Item Name *</label>
                 <input asp-for="ItemName" class="form-control" required>
