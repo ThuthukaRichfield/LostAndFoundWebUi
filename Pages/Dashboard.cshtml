@@ -41,53 +41,52 @@
 
 <!-- Items Container -->
 <div class="items" id="itemsContainer">
-    <!-- Lost Items -->
-    <div class="item lost" data-type="lost" data-user="student1">
-        <strong>LOST: Blue hat</strong>
-        <p>Lost near library on Monday</p>
-        <small>Posted: 2 days ago</small>
-        <div class="item-actions">
-            <button class="claim-btn" onclick="location.href='/ClaimItem?ItemId=1&ItemName=Blue Hat&ItemType=Lost&Location=Library&Date=2024-01-15&Description=Blue cap with school logo'">Claim Item</button>
-        </div>
-    </div>
-    
-    <div class="item lost" data-type="lost" data-user="student2">
-        <strong>LOST: Red jacket</strong>
-        <p>Lost in parking lot</p>
-        <small>Posted: 3 hours ago</small>
-        <div class="item-actions">
-            <button class="claim-btn" onclick="location.href='/ClaimItem?ItemId=3&ItemName=Red Jacket&ItemType=Lost&Location=Parking Lot&Date=2024-01-16&Description=Red waterproof jacket'">Claim Item</button>
-        </div>
-    </div>
 
-    <!-- Found Items -->
-    <div class="item found" data-type="found" data-user="staff1">
-        <strong>FOUND: Notebook</strong>
-        <p>Found in cafeteria</p>
-        <small>Posted: 1 day ago</small>
-        <div class="item-actions">
-            <button class="claim-btn" onclick="location.href='/ClaimItem?ItemId=2&ItemName=Notebook&ItemType=Found&Location=Cafeteria&Date=2024-01-14&Description=Spiral notebook with physics notes'">Claim Item</button>
-        </div>
-    </div>
+    @foreach (var item in Model.AllItems)
+    {
+        // ItemStatus: 0=Lost, 1=Found, 2=Claimed (Assuming from your ItemDto/API)
+        var isLost = item.Status == 0;
+        var isFound = item.Status == 1;
+        var isMyItem = item.CreatedBy == Model.Username;
 
-    <div class="item found" data-type="found" data-user="admin">
-        <strong>FOUND: Water bottle</strong>
-        <p>Found in gym</p>
-        <small>Posted: 5 hours ago</small>
-        <div class="item-actions">
-            <button class="claim-btn" onclick="location.href='/ClaimItem?ItemId=4&ItemName=Water Bottle&ItemType=Found&Location=Gym&Date=2024-01-16&Description=Blue stainless steel bottle'">Claim Item</button>
-        </div>
-    </div>
+        var itemTypeClass = isLost ? "lost" : isFound ? "found" : "claimed";
+        var myItemClass = isMyItem ? "my-item" : "";
+        var itemTypeFilter = isLost ? "lost" : "found"; // Filter type for JS
 
-    <!-- My Items (for current user) -->
-    <div class="item lost my-item" data-type="lost" data-user="@Model.Username">
-        <strong>LOST: Math textbook</strong>
-        <p>Lost in room 205</p>
-        <small>Posted: 1 week ago | This is your item</small>
-        <div class="item-actions">
-            <button class="edit-btn">Edit</button>
+        // URL for the Claim button
+        var claimUrl = $"/ClaimItem?ItemId={item.ItemId}&ItemName={item.Title}&ItemType={itemTypeFilter}&Location={item.Category}&Date={item.CreatedDate:yyyy-MM-dd}";
+
+        <div class="item @itemTypeClass @myItemClass"
+             data-type="@itemTypeFilter"
+             data-user="@item.CreatedBy">
+
+            <strong>@(isLost ? "LOST" : "FOUND"): @item.Title</strong>
+            <p>Category: @item.Category</p>
+            <small>
+                Posted: @item.CreatedDate.ToShortDateString()
+                @if (isMyItem)
+                {
+                    <span style="font-weight: bold; color: #3b82f6;">| This is your item</span>
+                }
+            </small>
+
+            <div class="item-actions">
+                @if (isMyItem)
+                {
+                    <button class="edit-btn">Edit/View Status</button>
+                }
+                else if (isLost || isFound)
+                {
+                    <button class="claim-btn" onclick="location.href='@claimUrl'">Claim Item</button>
+                }
+            </div>
         </div>
-    </div>
+    }
+
+    @if (!Model.AllItems.Any())
+    {
+        <p style="text-align: center; color: #999;">No lost or found items found in the system. Be the first to report one!</p>
+    }
 </div>
 
 <div class="pagination">

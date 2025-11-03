@@ -50,6 +50,16 @@ namespace LostAndFoundWebUi.Services
             public int UserRole { get; set; } = 1;
         }
 
+        //public class ItemDto
+        //{
+        //    public int ItemId { get; set; }
+        //    public string Title { get; set; } = string.Empty;
+        //    public string Category { get; set; } = string.Empty;
+        //    public DateTime CreatedDate { get; set; }
+        //    public int Status { get; set; } // Map to ItemStatus enum value (0: Lost, 1: Found, 2: Claimed)
+        //                                    // Add other properties as needed
+        //}
+
         public async Task<LoginResponse?> RegisterAsync(RegisterRequest1 registrationData)
         {
             // **Step 1: Construct the query string from the registration data.**
@@ -124,6 +134,39 @@ namespace LostAndFoundWebUi.Services
 
             // Return the list (it might be null if the API call failed or returned no data)
             return items ?? new List<ItemDto>();
+        }
+
+        public async Task<List<ItemDto>> GetItemsAsync(int? status = null, string? searchTerm = null)
+        {
+            var queryParams = new List<string>();
+
+            if (status.HasValue)
+            {
+                // The API query uses 'Status' parameter
+                queryParams.Add($"Status={status.Value}");
+            }
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                // The API query uses 'SearchTerm' parameter
+                queryParams.Add($"SearchTerm={Uri.EscapeDataString(searchTerm)}");
+            }
+
+            var queryString = string.Join("&", queryParams);
+            var requestUri = $"Item/get-lost-items{(queryString.Length > 0 ? $"?{queryString}" : string.Empty)}";
+
+            // Assuming your API GetLostItems endpoint now supports the common GetItemsQuery
+            try
+            {
+                var items = await _httpClient.GetFromJsonAsync<List<ItemDto>>(requestUri);
+                return items ?? new List<ItemDto>();
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                Console.WriteLine($"Error fetching items: {ex.Message}");
+                return new List<ItemDto>();
+            }
         }
     }
 }
