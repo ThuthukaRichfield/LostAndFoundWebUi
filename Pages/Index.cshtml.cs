@@ -1,87 +1,85 @@
+﻿using LostAndFoundWebUi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging; // Ensure this is imported
 
 namespace LostAndFoundWebUi.Pages
 {
     public class IndexModel : PageModel
     {
-        [BindProperty]
-        public string Email { get; set; } = string.Empty;
-
-        [BindProperty]
-        public string Password { get; set; } = string.Empty;
-
-        // Test users database
-        private readonly Dictionary<string, (string Password, string Name, string Role)> _testUsers = new()
-        {
-            // Admin users
-            {"admin@richfield.co.za", ("admin", "System Administrator", "Admin")},
-            
-            // Student users
-            {"student1@richfield.co.za", ("student123", "Alice Johnson", "Student")},
-            {"student2@richfield.co.za", ("student123", "Bob Smith", "Student")},
-            {"john.doe@richfield.co.za", ("student123", "John Doe", "Student")},
-        };
-
         private readonly ILogger<IndexModel> _logger;
+        private readonly LostAndFoundApiService _apiService; // Inject the API service
 
-        public IndexModel(ILogger<IndexModel> logger)
+        [BindProperty]
+        public string Email { get; set; } = "adminTD4@admin.com";
+
+        [BindProperty]
+        public string Password { get; set; } = "Admin@123";
+
+        public IndexModel(ILogger<IndexModel> logger, LostAndFoundApiService apiService)
         {
             _logger = logger;
+            _apiService = apiService;
         }
 
         public void OnGet()
         {
+            // Clear any old authentication information on page load (logout on entry)
+            HttpContext.Session.Remove("Username");
+            HttpContext.Session.Remove("DisplayName");
+            HttpContext.Session.Remove("IsAuthenticated");
+            HttpContext.Session.Remove("UserRole");
+            // 🌟 Crucially, remove the JWT token
+            HttpContext.Session.Remove("JwtToken");
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync() // Changed to async Task<IActionResult>
         {
-            _logger.LogInformation($"Login attempt - Email: {Email}, Password: {Password}");
-
-            // Check if user exists
-            if (_testUsers.TryGetValue(Email, out var user))
+            if (!ModelState.IsValid)
             {
-                _logger.LogInformation($"User found: {user.Name}, Role: {user.Role}");
-                
-                // Check password
-                if (user.Password == Password)
+                return Page();
+            }
+
+            _logger.LogInformation($"Login attempt to API - Email: {Email}");
+
+            // 1. Call the API Login Endpoint
+            var loginResponse = await _apiService.LoginAsync(Email, Password);
+
+            if (loginResponse != null && !string.IsNullOrEmpty(loginResponse.Token))
+            {
+                _logger.LogInformation("API Login successful - storing session variables");
+
+                // 2. SUCCESS: Store the JWT Token and other user data from the API response
+                HttpContext.Session.SetString("JwtToken", loginResponse.Token);
+
+                // Assuming the API sends Role and DisplayName in the LoginResponse:
+                // If not, you may need a separate API call to get user details
+                HttpContext.Session.SetString("Username", Email);
+                HttpContext.Session.SetString("DisplayName", loginResponse.DisplayName);
+                HttpContext.Session.SetString("IsAuthenticated", "true");
+                HttpContext.Session.SetString("UserRole", loginResponse.Role);
+
+                _logger.LogInformation($"User Role: {loginResponse.Role}");
+
+                // 3. Redirect based on role
+                if (loginResponse.Role == "Admin")
                 {
-                    _logger.LogInformation("Password correct - setting session variables");
-                    
-                    // Store user information in session
-                    HttpContext.Session.SetString("Username", Email);
-                    HttpContext.Session.SetString("DisplayName", user.Name);
-                    HttpContext.Session.SetString("IsAuthenticated", "true");
-                    HttpContext.Session.SetString("UserRole", user.Role);
-
-                    // Log session values for debugging
-                    _logger.LogInformation($"Session set - Username: {Email}, Role: {user.Role}, DisplayName: {user.Name}");
-
-                    // Redirect based on role
-                    if (user.Role == "Admin")
-                    {
-                        _logger.LogInformation("Redirecting to AdminDashboard");
-                        return RedirectToPage("/AdminDashboard");
-                    }
-                    else
-                    {
-                        _logger.LogInformation("Redirecting to regular Dashboard");
-                        return RedirectToPage("/Dashboard");
-                    }
+                    _logger.LogInformation("Redirecting to AdminDashboard");
+                    return RedirectToPage("/AdminDashboard");
                 }
                 else
                 {
-                    _logger.LogWarning("Password incorrect");
-                    ModelState.AddModelError(string.Empty, "Invalid password.");
+                    _logger.LogInformation("Redirecting to regular Dashboard");
+                    return RedirectToPage("/Dashboard");
                 }
             }
             else
             {
-                _logger.LogWarning("User not found in test users");
-                ModelState.AddModelError(string.Empty, "User not found.");
+                // 4. FAILURE: Show error message
+                _logger.LogWarning("API Login failed or token was empty.");
+                ModelState.AddModelError(string.Empty, "Invalid login attempt. Please check your email and password.");
+                return Page();
             }
-
-            return Page();
         }
     }
 }
