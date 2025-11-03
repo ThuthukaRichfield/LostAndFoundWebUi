@@ -493,3 +493,12 @@ $RECYCLE.BIN/
 *.sourcelink.json
 # Depending on your setup, apphost.exe might already be covered by bin/
 apphost.exe
+/obj/LostAndFoundWebUi.csproj.nuget.dgspec.json
+/obj/LostAndFoundWebUi.csproj.nuget.g.props
+/obj/project.assets.json
+/obj/project.nuget.cache
+/obj/Debug/net9.0/LostAndFoundWebUi.AssemblyInfo.cs
+/obj/Debug/net9.0/LostAndFoundWebUi.AssemblyInfoInputs.cache
+/obj/Debug/net9.0/LostAndFoundWebUi.assets.cache
+/obj/Debug/net9.0/LostAndFoundWebUi.GeneratedMSBuildEditorConfig.editorconfig
+/bin/Debug/net9.0/LostAndFoundWebUi.dll

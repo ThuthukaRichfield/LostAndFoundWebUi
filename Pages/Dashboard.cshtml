@@ -10,7 +10,7 @@
         <div>
             <h2 style="margin: 0; color: #1e3a8a;">Welcome, @Model.DisplayName!</h2>
             <p style="margin: 5px 0 0 0; color: #475569;">
-                Role: <strong>@Model.UserRole</strong> | 
+                Role: <strong>@Model.UserRole</strong> |
                 Email: @Model.Username
             </p>
         </div>
@@ -53,15 +53,13 @@
         var myItemClass = isMyItem ? "my-item" : "";
         var itemTypeFilter = isLost ? "lost" : "found"; // Filter type for JS
 
-<<<<<<< HEAD
-    <!-- My Items (for current user) -->
-    <div class="item lost my-item" data-type="lost" data-user="@Model.Username">
-        <strong>LOST: Math textbook</strong>
-        <p>Lost in room 205</p>
-        <small>Posted: 1 week ago | This is your item</small>
-       
-    </div>
-=======
+        <div class="item lost my-item" data-type="lost" data-user="@Model.Username">
+            <strong>LOST: Math textbook</strong>
+            <p>Lost in room 205</p>
+            <small>Posted: 1 week ago | This is your item</small>
+
+        </div>
+
         // URL for the Claim button
         var claimUrl = $"/ClaimItem?ItemId={item.ItemId}&ItemName={item.Title}&ItemType={itemTypeFilter}&Location={item.Category}&Date={item.CreatedDate:yyyy-MM-dd}";
 
@@ -96,7 +94,6 @@
     {
         <p style="text-align: center; color: #999;">No lost or found items found in the system. Be the first to report one!</p>
     }
->>>>>>> de35ca126d2e95cc7da1237951d35055a82488a7
 </div>
 
 <div class="pagination">
@@ -162,11 +159,11 @@
         cursor: pointer;
     }
 
-    .filter-link.active {
-        text-decoration: underline;
-        color: #1e3a8a;
-        font-weight: bold;
-    }
+        .filter-link.active {
+            text-decoration: underline;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
 
     .items {
         display: flex;
@@ -184,13 +181,13 @@
         display: block; /* Will be toggled by JavaScript */
     }
 
-    .item.lost {
-        border-left: 6px solid #ef4444;
-    }
+        .item.lost {
+            border-left: 6px solid #ef4444;
+        }
 
-    .item.found {
-        border-left: 6px solid #10b981;
-    }
+        .item.found {
+            border-left: 6px solid #10b981;
+        }
 
     .my-item {
         background-color: #f0f9ff !important;
@@ -230,14 +227,14 @@
         margin: 20px 0;
     }
 
-    .pagination button {
-        background-color: #fde68a;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 500;
-    }
+        .pagination button {
+            background-color: #fde68a;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
 
     .bottom-buttons {
         display: flex;
@@ -256,9 +253,9 @@
         font-size: 1rem;
     }
 
-    .report-lost:hover, .report-found:hover {
-        background-color: #2563eb;
-    }
+        .report-lost:hover, .report-found:hover {
+            background-color: #2563eb;
+        }
 </style>
 
 <script>
@@ -273,9 +270,9 @@
             const itemType = item.getAttribute('data-type');
             const itemUser = item.getAttribute('data-user');
             const itemText = item.textContent.toLowerCase();
-            
+
             let shouldShow = false;
-            
+
             // Apply filter logic
             switch (activeFilter) {
                 case 'all':
@@ -291,12 +288,12 @@
                     shouldShow = itemUser === currentUser;
                     break;
             }
-            
+
             // Apply search filter
             if (shouldShow && searchTerm) {
                 shouldShow = itemText.includes(searchTerm);
             }
-            
+
             // Show/hide item
             item.style.display = shouldShow ? 'block' : 'none';
         });
@@ -305,17 +302,17 @@
     // Initialize filter links
     document.addEventListener('DOMContentLoaded', function() {
         const filterLinks = document.querySelectorAll('.filter-link');
-        
+
         filterLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
-                
+
                 // Remove active class from all links
                 filterLinks.forEach(l => l.classList.remove('active'));
-                
+
                 // Add active class to clicked link
                 this.classList.add('active');
-                
+
                 // Apply filter
                 filterItems();
             });
@@ -323,7 +320,7 @@
 
         // Add search input event listener
         document.getElementById('searchInput').addEventListener('input', filterItems);
-        
+
         // Apply initial filter
         filterItems();
     });
