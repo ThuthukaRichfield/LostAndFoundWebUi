@@ -1,0 +1,14 @@
+﻿namespace LostAndFoundWebUi.Models
+{
+    public class ItemDto
+    {
+        public int ItemId { get; set; }
+        public string Title { get; set; }
+        public string Category { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
+        public string? LastModifiedBy { get; set; }
+        //public ItemStatus Status { get; set; }
+    }
+}
