@@ -6,45 +6,35 @@
 
 <div class="container">
     <h1>Claim Item</h1>
-    
+    <p>Submit a claim to the item owner for review.</p>
+
+    @* ADDED: Display Error Message *@
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" style="color: #dc2626; border: 1px solid; padding: 15px; margin-bottom: 20px; background-color: #fef2f2; border-radius: 5px;">
+            <strong>Error!</strong> @Model.ErrorMessage
+        </div>
+    }
+
     <div class="item-details">
-        <h2>@Model.ItemName</h2>
-        <p><strong>Type:</strong> @Model.ItemType</p>
-        <p><strong>Location:</strong> @Model.Location</p>
-        <p><strong>Date:</strong> @Model.Date.ToString("MMM dd, yyyy")</p>
-        <p><strong>Description:</strong> @Model.Description</p>
+        <h2>@Model.ItemName <span class="badge">ID: @Model.ItemId</span></h2>
+        <p><strong>Category:</strong> @Model.ItemType</p>
+        <p><strong>Location Found:</strong> @Model.Location</p>
+        <p><strong>Date Found:</strong> @Model.Date.ToString("MMM dd, yyyy")</p>
+        
+        <input type="hidden" asp-for="ItemId" />
     </div>
 
-    <form method="post" enctype="multipart/form-data" class="claim-form">
+    <form method="post" class="claim-form">
         <div class="form-section">
-            <h3>Claim Information</h3>
+            <h3>Claim Reason</h3>
             
             <div class="form-group">
                 <label asp-for="ClaimReason">Why do you believe this is your item? *</label>
                 <textarea asp-for="ClaimReason" class="form-control" rows="4" required placeholder="Please provide details about why you believe this item belongs to you..."></textarea>
                 <span asp-validation-for="ClaimReason" class="text-danger"></span>
             </div>
-
-            <div class="form-group">
-                <label asp-for="ContactInfo">Contact Information *</label>
-                <input asp-for="ContactInfo" class="form-control" required placeholder="Phone number or additional email">
-                <span asp-validation-for="ContactInfo" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="form-section">
-            <h3>Supporting Evidence</h3>
             
-            <div class="form-group">
-                <label asp-for="SupportingImages">Upload Supporting Images</label>
-                <input asp-for="SupportingImages" type="file" class="form-control" multiple accept="image/*">
-                <small class="text-muted">Upload photos that prove this item belongs to you (receipts, previous photos, etc.)</small>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="AdditionalInfo">Additional Information</label>
-                <textarea asp-for="AdditionalInfo" class="form-control" rows="3" placeholder="Any additional information that might help verify your claim..."></textarea>
-            </div>
         </div>
 
         <div class="form-actions">

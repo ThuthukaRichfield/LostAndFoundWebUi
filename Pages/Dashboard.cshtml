@@ -42,8 +42,16 @@
 <!-- Items Container -->
 <div class="items" id="itemsContainer">
 
+    <div class="item lost my-item" data-type="lost" data-user="@Model.Username">
+        <strong>LOST: Math textbook</strong>
+        <p>Lost in room 205</p>
+        <small>Posted: 1 week ago | This is your item</small>
+
+    </div>
+
     @foreach (var item in Model.AllItems)
     {
+
         // ItemStatus: 0=Lost, 1=Found, 2=Claimed (Assuming from your ItemDto/API)
         var isLost = item.Status == 0;
         var isFound = item.Status == 1;
@@ -52,13 +60,6 @@
         var itemTypeClass = isLost ? "lost" : isFound ? "found" : "claimed";
         var myItemClass = isMyItem ? "my-item" : "";
         var itemTypeFilter = isLost ? "lost" : "found"; // Filter type for JS
-
-        <div class="item lost my-item" data-type="lost" data-user="@Model.Username">
-            <strong>LOST: Math textbook</strong>
-            <p>Lost in room 205</p>
-            <small>Posted: 1 week ago | This is your item</small>
-
-        </div>
 
         // URL for the Claim button
         var claimUrl = $"/ClaimItem?ItemId={item.ItemId}&ItemName={item.Title}&ItemType={itemTypeFilter}&Location={item.Category}&Date={item.CreatedDate:yyyy-MM-dd}";

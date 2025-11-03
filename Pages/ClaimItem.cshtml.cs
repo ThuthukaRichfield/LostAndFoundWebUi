@@ -1,15 +1,31 @@
+using LostAndFoundWebUi.Models;
+using LostAndFoundWebUi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 
 namespace LostAndFoundWebUi.Pages
 {
     public class ClaimItemModel : PageModel
     {
+        private readonly LostAndFoundApiService _apiService;
+
+        public ClaimItemModel(LostAndFoundApiService apiService)
+        {
+            _apiService = apiService;
+        }
+
+        // --- Item Data (Received via URL/Query String, must be preserved on POST) ---
+
+        // ItemId is crucial for the API, so it needs [Required] and the hidden input in the HTML.
         [BindProperty(SupportsGet = true)]
-        public string ItemId { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Item ID is required.")]
+        public int ItemId { get; set; }
+
+        // REMOVE [Required] from all display fields below:
 
         [BindProperty(SupportsGet = true)]
-        public string ItemName { get; set; } = string.Empty;
+        public string ItemName { get; set; } = "Item Details Loading...";
 
         [BindProperty(SupportsGet = true)]
         public string ItemType { get; set; } = string.Empty;
@@ -20,37 +36,60 @@ namespace LostAndFoundWebUi.Pages
         [BindProperty(SupportsGet = true)]
         public DateTime Date { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public string Description { get; set; } = string.Empty;
-
         [BindProperty]
+        [Required(ErrorMessage = "You must provide a reason for claiming this item.")]
         public string ClaimReason { get; set; } = string.Empty;
 
-        [BindProperty]
-        public string ContactInfo { get; set; } = string.Empty;
-
-        [BindProperty]
-        public string AdditionalInfo { get; set; } = string.Empty;
-
-        [BindProperty]
-        public List<IFormFile>? SupportingImages { get; set; }
+        // --- Feedback Properties ---
+        public string ErrorMessage { get; set; } = string.Empty;
 
         public void OnGet()
         {
+            if (ItemId == 0)
+            {
+                ErrorMessage = "No Item ID provided.";
+            }
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
+            // 1. Basic Model Validation
             if (!ModelState.IsValid)
             {
+                // This should now only fail if ItemId or ClaimReason is missing
                 return Page();
             }
 
-            // TODO: Save claim to database
-            // Process supporting images
+            // 2. Get the current user's email from session
+            var userEmail = HttpContext.Session.GetString("Username");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                ErrorMessage = "User session expired. Please log in again.";
+                return Page();
+            }
 
-            TempData["SuccessMessage"] = "Claim submitted successfully! The admin will review your claim.";
-            return RedirectToPage("/Dashboard");
+            // 3. Map form data to the API request DTO
+            var request = new CreateClaimRequest
+            {
+                UserEmail = userEmail,
+                ItemId = ItemId,
+                Reason = ClaimReason
+            };
+
+            // 4. Call the API
+            var result = await _apiService.CreateClaimAsync(request);
+
+            // 5. Handle the API result
+            if (result.Status)
+            {
+                TempData["SuccessMessage"] = "Claim submitted successfully! The owner will be notified.";
+                return RedirectToPage("/Dashboard");
+            }
+            else
+            {
+                ErrorMessage = $"Failed to create claim: {result.Message}";
+                return Page();
+            }
         }
     }
 }
