@@ -40,6 +40,49 @@ namespace LostAndFoundWebUi.Services
             public string DisplayName { get; set; } = string.Empty;
         }
 
+        // New model for registration request data (to be sent to the API)
+        public class RegisterRequest1
+        {
+            public string Email { get; set; }
+            public string Password { get; set; }
+            public string Name { get; set; }
+            // Defaulting to "User" role for web UI registration
+            public int UserRole { get; set; } = 1;
+        }
+
+        public async Task<LoginResponse?> RegisterAsync(RegisterRequest1 registrationData)
+        {
+            // **Step 1: Construct the query string from the registration data.**
+            var queryParams = new Dictionary<string, string>
+            {
+                { "Email", registrationData.Email },
+                { "Password", registrationData.Password },
+                { "Name", registrationData.Name },
+                { "UserRole", registrationData.UserRole.ToString() }
+            };
+
+            var queryString = new FormUrlEncodedContent(queryParams).ReadAsStringAsync().Result;
+
+            // **Step 2: Construct the full URL with the query string.**
+            // Assuming the API registration endpoint is "User/create-user"
+            var requestUri = $"User/create-user?{queryString}";
+
+            // **Step 3: Send the POST request with an empty body (since data is in the URL).**
+            // Note: Sending sensitive data (like password) in a URL is not recommended 
+            // and should typically be done via a POST body.
+            var response = await _httpClient.PostAsync(requestUri, new StringContent(string.Empty));
+
+            if (response.IsSuccessStatusCode)
+            {
+                // The registration endpoint may return a LoginResponse (token, display name, etc.)
+                var jsonString = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<LoginResponse>(jsonString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+
+            // If the API returns a status code like 400 (Bad Request), return null.
+            return null;
+        }
+
         /// <summary>
         /// Authenticates the user against the API and returns the JWT token and user info.
         /// </summary>
