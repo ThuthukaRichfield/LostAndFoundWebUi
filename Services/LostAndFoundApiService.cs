@@ -195,5 +195,31 @@ namespace LostAndFoundWebUi.Services
                 return OperationStatus.CreateFromException("Network or serialization error occurred.", ex);
             }
         }
+
+        public async Task<OperationStatus> ReportFoundItemAsync(ReportLostItemRequest request)
+        {
+            try
+            {
+                //var response = await _httpClient.PostAsJsonAsync("Item/report-found-item", request);
+                var response = await _httpClient.PostAsJsonAsync("api/Item/report-found-item", request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Assuming OperationStatus is defined in your UI project
+                    var status = await response.Content.ReadFromJsonAsync<Models.OperationStatus>();
+                    return status ?? new OperationStatus();
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    return OperationStatus.CreateFromException($"API Error: {response.StatusCode}", new Exception(error));
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle network or serialization errors
+                return OperationStatus.CreateFromException("Network or serialization error occurred.", ex);
+            }
+        }
     }
 }
