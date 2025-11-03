@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model LostAndFoundWebUi.Pages.IndexModel
 @{
     ViewData["Title"] = "Login - Lost & Found";
@@ -12,30 +12,27 @@
         <form method="post">
             <div class="form-group">
                 <label>Email Address</label>
-                <input type="email" asp-for="Email" class="form-control" required value="admin@richfield.co.za" />
+                <input type="email" asp-for="Email" class="form-control" required value="adminTD4@admin.com" />
             </div>
 
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" asp-for="Password" class="form-control" required value="admin" />
+                <input type="password" asp-for="Password" class="form-control" required value="Admin@123" />
             </div>
 
             <button type="submit" class="btn-login">Login</button>
 
+            @* 🌟 CHANGE: Ensure ValidationMessageTagHelper is used to show detailed error 🌟 *@
             @if (!ViewData.ModelState.IsValid)
             {
                 <div class="alert alert-danger mt-3">
-                    @Html.ValidationSummary()
+                    @* This line is sufficient, but let's be explicit for clarity *@
+                    <div asp-validation-summary="All"></div>
                 </div>
             }
         </form>
 
-        
-
-            
-
-            
-        
+        @* Remove empty lines for cleanliness *@
 
         <p class="register-link">
             Don't have an account?
@@ -45,140 +42,160 @@
 </div>
 
 <style>
-    .login-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 20px;
+        .login-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                padding: 20px;
+
     }
 
-    .login-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        width: 100%;
-        max-width: 500px;
+        .login-card {
+                background: white;
+                padding: 2rem;
+                border-radius: 12px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+                width: 100%;
+                max-width: 500px;
+
     }
 
-    h2 {
-        color: #1e3a8a;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        text-align: center;
+        h2 {
+                color: #1e3a8a;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+                text-align: center;
+
     }
 
-    .subtitle {
-        color: #475569;
-        margin-bottom: 2rem;
-        text-align: center;
+        .subtitle {
+                color: #475569;
+                margin-bottom: 2rem;
+                text-align: center;
+
     }
 
-    .form-group {
-        margin-bottom: 1.5rem;
+        .form-group {
+                margin-bottom: 1.5rem;
+
     }
 
-    label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: #374151;
+        label {
+                display: block;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: #374151;
+
     }
 
-    .form-control {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        font-size: 1rem;
-        transition: border-color 0.3s, box-shadow 0.3s;
+        .form-control {
+                width: 100%;
+                padding: 0.75rem;
+                border: 1px solid #d1d5db;
+                border-radius: 8px;
+                font-size: 1rem;
+                transition: border-color 0.3s, box-shadow 0.3s;
+
     }
 
-    .form-control:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        outline: none;
+            .form-control:focus {
+                    border-color: #3b82f6;
+                    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                    outline: none;
+
+        }
+
+        .btn-login {
+                width: 100%;
+                padding: 0.75rem;
+                background: #1e3a8a;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: background 0.3s;
+                margin-bottom: 1.5rem;
+
     }
 
-    .btn-login {
-        width: 100%;
-        padding: 0.75rem;
-        background: #1e3a8a;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: background 0.3s;
-        margin-bottom: 1.5rem;
+            .btn-login:hover {
+                    background: #2563eb;
+
+        }
+
+        .alert {
+                padding: 0.75rem;
+                background: #fef2f2;
+                border: 1px solid #fecaca;
+                border-radius: 6px;
+                color: #dc2626;
+                margin-bottom: 1rem;
+
     }
 
-    .btn-login:hover {
-        background: #2563eb;
+        .test-credentials {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 1.5rem;
+                margin: 1.5rem 0;
+
     }
 
-    .alert {
-        padding: 0.75rem;
-        background: #fef2f2;
-        border: 1px solid #fecaca;
-        border-radius: 6px;
-        color: #dc2626;
-        margin-bottom: 1rem;
+            .test-credentials h3 {
+                    margin: 0 0 1rem 0;
+                    color: #1e3a8a;
+                    font-size: 1.1rem;
+                    text-align: center;
+
+        }
+
+        .credential-group {
+                margin-bottom: 1rem;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid #e2e8f0;
+
     }
 
-    .test-credentials {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin: 1.5rem 0;
+            .credential-group:last-child {
+                    border-bottom: none;
+                    margin-bottom: 0;
+
+        }
+
+            .credential-group strong {
+                    display: block;
+                    color: #374151;
+                    margin-bottom: 0.5rem;
+
+        }
+
+            .credential-group div {
+                    font-size: 0.9rem;
+                    color: #6b7280;
+                    margin-bottom: 0.25rem;
+
+        }
+
+        .register-link {
+                text-align: center;
+                color: #6b7280;
+                margin-top: 1.5rem;
+
     }
 
-    .test-credentials h3 {
-        margin: 0 0 1rem 0;
-        color: #1e3a8a;
-        font-size: 1.1rem;
-        text-align: center;
-    }
+            .register-link a {
+                    color: #3b82f6;
+                    text-decoration: none;
+                    font-weight: 500;
 
-    .credential-group {
-        margin-bottom: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid #e2e8f0;
-    }
+        }
 
-    .credential-group:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-    }
+                .register-link a:hover {
+                        text-decoration: underline;
 
-    .credential-group strong {
-        display: block;
-        color: #374151;
-        margin-bottom: 0.5rem;
-    }
-
-    .credential-group div {
-        font-size: 0.9rem;
-        color: #6b7280;
-        margin-bottom: 0.25rem;
-    }
-
-    .register-link {
-        text-align: center;
-        color: #6b7280;
-        margin-top: 1.5rem;
-    }
-
-    .register-link a {
-        color: #3b82f6;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .register-link a:hover {
-        text-decoration: underline;
-    }
+            }
 </style>

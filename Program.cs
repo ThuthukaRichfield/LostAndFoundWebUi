@@ -7,10 +7,11 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddHttpClient<LostAndFoundApiService>(client =>
 {
-    // Configure the base address for your API.
-    // IMPORTANT: Replace the URL with the correct URL/port your API is running on.
-    // For development, this is typically https://localhost:<PortNumber>
-    client.BaseAddress = new Uri("https://localhost:44377/");
+    // Configure the base address for your API.
+    // IMPORTANT: Replace the URL with the correct URL/port your API is running on.
+    // For development, this is typically https://localhost:<PortNumber>
+    // NOTE: Ensure you append the trailing slash for correct relative path resolution later (e.g., "Auth/login")
+    client.BaseAddress = new Uri("https://localhost:44377/api/");
 });
 
 builder.Services.AddDistributedMemoryCache();
@@ -36,8 +37,13 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthorization();
+
+// 🌟 CHANGE 1: Move app.UseSession() before app.UseAuthorization() and app.MapRazorPages()
+// Session must be configured before it is accessed.
 app.UseSession();
+
+app.UseAuthorization();
+
 app.MapRazorPages();
 
 app.Run();

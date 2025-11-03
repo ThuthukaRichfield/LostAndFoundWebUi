@@ -482,3 +482,14 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Exclude standard build output directories
+**/bin/
+**/obj/
+
+# Exclude IDE/Build specific files
+*.cache.json
+*.ds.cache.json
+*.sourcelink.json
+# Depending on your setup, apphost.exe might already be covered by bin/
+apphost.exe
