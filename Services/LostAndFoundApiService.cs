@@ -221,5 +221,45 @@ namespace LostAndFoundWebUi.Services
                 return OperationStatus.CreateFromException("Network or serialization error occurred.", ex);
             }
         }
+
+        public async Task<OperationStatus> CreateClaimAsync(CreateClaimRequest request)
+        {
+            try
+            {
+                // 1. Build the query parameters string
+                var queryParams = new Dictionary<string, string>
+                {
+                    { "UserEmail", request.UserEmail },
+                    { "ItemId", request.ItemId.ToString() },
+                    { "Reason", request.Reason }
+                };
+
+                // This correctly URL-encodes the parameters
+                var queryString = new FormUrlEncodedContent(queryParams).ReadAsStringAsync().Result;
+
+                // 2. Construct the full request URI with the query string
+                // Base route: api/Claim/create-claim
+                var requestUri = $"api/Claim/create-claim?{queryString}";
+
+                // 3. Send the POST request with the data in the URL and an empty body.
+                // PostAsync is used instead of PostAsJsonAsync since we are sending data via the URL.
+                var response = await _httpClient.PostAsync(requestUri, new StringContent(string.Empty));
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var status = await response.Content.ReadFromJsonAsync<Models.OperationStatus>();
+                    return status ?? new OperationStatus();
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    return OperationStatus.CreateFromException($"API Error: {response.StatusCode}", new Exception(error));
+                }
+            }
+            catch (Exception ex)
+            {
+                return OperationStatus.CreateFromException("Network or serialization error occurred during claim creation.", ex);
+            }
+        }
     }
 }
