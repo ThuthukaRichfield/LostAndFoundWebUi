@@ -7,11 +7,11 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore "./MyApp.csproj"
-RUN dotnet publish "./MyApp.csproj" -c Release -o /app/publish
+RUN dotnet restore "./LostAndFoundWebUi.csproj"
+RUN dotnet publish "./LostAndFoundWebUi.csproj" -c Release -o /app/publish
 
 # Final stage
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "MyApp.dll"]
+ENTRYPOINT ["dotnet", "LostAndFoundWebUi.dll"]
