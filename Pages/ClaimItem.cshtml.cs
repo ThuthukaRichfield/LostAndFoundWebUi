@@ -15,14 +15,9 @@ namespace LostAndFoundWebUi.Pages
             _apiService = apiService;
         }
 
-        // --- Item Data (Received via URL/Query String, must be preserved on POST) ---
-
-        // ItemId is crucial for the API, so it needs [Required] and the hidden input in the HTML.
         [BindProperty(SupportsGet = true)]
         [Required(ErrorMessage = "Item ID is required.")]
         public int ItemId { get; set; }
-
-        // REMOVE [Required] from all display fields below:
 
         [BindProperty(SupportsGet = true)]
         public string ItemName { get; set; } = "Item Details Loading...";

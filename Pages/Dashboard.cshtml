@@ -43,12 +43,42 @@
 <div class="items" id="itemsContainer">
     @foreach (var item in Model.AllItems)
     {
-        // ItemStatus: 0=Lost, 1=Found, 2=Claimed (Assuming from your ItemDto/API)
+        // ItemStatus: 0=Lost, 1=Found, 2=Claimed
         var isLost = item.Status == 0;
         var isFound = item.Status == 1;
+        var isClaimed = item.Status == 2; // New check for claimed status
 
-        // 🌟 CHANGE 1: Check CreatedBy OR LastModifiedBy
-        var isMyItem = item.CreatedBy == Model.Username || item.LastModifiedBy == Model.Username;
+        // Check user involvement
+        var isUserCreator = item.CreatedBy == Model.Username;
+        var isUserLastModifier = item.LastModifiedBy == Model.Username;
+        var isUserClaimer = item.ClaimedBy == Model.Username;
+
+        // Determine if it's "My Item" (for class styling and general display)
+        var isMyItem = isUserCreator || isUserLastModifier || isUserClaimer;
+
+        // 🌟 NEW: Determine the specific message for the user
+        var itemStatusMessage = "";
+        if (isMyItem)
+        {
+            if (isUserClaimer)
+            {
+                // This is the most definite status for the user
+                itemStatusMessage = "You claimed this item";
+            }
+            else if (isUserCreator && isLost)
+            {
+                itemStatusMessage = "You lost this item";
+            }
+            else if (isUserCreator && isFound)
+            {
+                itemStatusMessage = "You found this item";
+            }
+            else if (isUserLastModifier)
+            {
+                // General message if they only modified it, or if creator status is unclear
+                itemStatusMessage = "You are an item manager/contributor";
+            }
+        }
 
         var itemTypeClass = isLost ? "lost" : isFound ? "found" : "claimed";
         var myItemClass = isMyItem ? "my-item" : "";
@@ -60,8 +90,8 @@
         <div class="item @itemTypeClass @myItemClass"
              data-type="@itemTypeFilter"
              data-user="@item.CreatedBy"
-             data-modified-user="@item.LastModifiedBy">
-            @* 🌟 CHANGE 2: Add Last Modified User Data Attribute *@
+             data-modified-user="@item.LastModifiedBy"
+             data-claimed-user="@item.ClaimedBy">
 
             <strong>@(isLost ? "LOST" : "FOUND"): @item.Title</strong>
             <p>Category: @item.Category</p>
@@ -69,7 +99,7 @@
                 Posted: @item.CreatedDate.ToShortDateString()
                 @if (isMyItem)
                 {
-                    <span style="font-weight: bold; color: #3b82f6;">| This is your item</span>
+                    <span style="font-weight: bold; color: #3b82f6;">| @itemStatusMessage</span> @* 🌟 Display the new specific message *@
                 }
             </small>
 
@@ -254,70 +284,75 @@
         }
 </style>
 
-<script>
-    // Filter items based on selection
-    function filterItems() {
-        const activeFilter = document.querySelector('.filter-link.active').getAttribute('data-filter');
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const items = document.querySelectorAll('.item');
-        const currentUser = '@Model.Username';
+    <script>
+        // Filter items based on selection
+        function filterItems() {
+            const activeFilter = document.querySelector('.filter-link.active').getAttribute('data-filter');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const items = document.querySelectorAll('.item');
+            const currentUser = '@Model.Username';
 
-        items.forEach(item => {
-            const itemType = item.getAttribute('data-type');
-            const itemUser = item.getAttribute('data-user');
-            const itemText = item.textContent.toLowerCase();
+            items.forEach(item => {
+                const itemType = item.getAttribute('data-type');
+                const itemCreatedUser = item.getAttribute('data-user'); // Renamed for clarity
+                const itemModifiedUser = item.getAttribute('data-modified-user'); // Retrieve last modified user
+                const itemClaimedUser = item.getAttribute('data-claimed-user'); // Retrieve claimed user
+                const itemText = item.textContent.toLowerCase();
 
-            let shouldShow = false;
+                let shouldShow = false;
 
-            // Apply filter logic
-            switch (activeFilter) {
-                case 'all':
-                    shouldShow = true;
-                    break;
-                case 'lost':
-                    shouldShow = itemType === 'lost';
-                    break;
-                case 'found':
-                    shouldShow = itemType === 'found';
-                    break;
-                case 'myitems':
-                    shouldShow = itemUser === currentUser;
-                    break;
-            }
+                // Apply filter logic
+                switch (activeFilter) {
+                    case 'all':
+                        shouldShow = true;
+                        break;
+                    case 'lost':
+                        shouldShow = itemType === 'lost';
+                        break;
+                    case 'found':
+                        shouldShow = itemType === 'found';
+                        break;
+                    case 'myitems':
+                        // 🌟 JS LOGIC FIX: Check CreatedBy OR LastModifiedBy OR ClaimedBy
+                        shouldShow = itemCreatedUser === currentUser ||
+                                     itemModifiedUser === currentUser ||
+                                     itemClaimedUser === currentUser;
+                        break;
+                }
 
-            // Apply search filter
-            if (shouldShow && searchTerm) {
-                shouldShow = itemText.includes(searchTerm);
-            }
+                // Apply search filter
+                if (shouldShow && searchTerm) {
+                    shouldShow = itemText.includes(searchTerm);
+                }
 
-            // Show/hide item
-            item.style.display = shouldShow ? 'block' : 'none';
-        });
-    }
-
-    // Initialize filter links
-    document.addEventListener('DOMContentLoaded', function() {
-        const filterLinks = document.querySelectorAll('.filter-link');
-
-        filterLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                // Remove active class from all links
-                filterLinks.forEach(l => l.classList.remove('active'));
-
-                // Add active class to clicked link
-                this.classList.add('active');
-
-                // Apply filter
-                filterItems();
+                // Show/hide item
+                item.style.display = shouldShow ? 'block' : 'none';
             });
+        }
+
+        // Initialize filter links
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterLinks = document.querySelectorAll('.filter-link');
+
+            filterLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Remove active class from all links
+                    filterLinks.forEach(l => l.classList.remove('active'));
+
+                    // Add active class to clicked link
+                    this.classList.add('active');
+
+                    // Apply filter
+                    filterItems();
+                });
+            });
+
+            // Add search input event listener
+            document.getElementById('searchInput').addEventListener('input', filterItems);
+
+            // Apply initial filter
+            filterItems();
         });
-
-        // Add search input event listener
-        document.getElementById('searchInput').addEventListener('input', filterItems);
-
-        // Apply initial filter
-        filterItems();
-    });
-</script>
+    </script>

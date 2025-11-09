@@ -11,6 +11,6 @@
         public string? LastModifiedBy { get; set; }
         //public ItemStatus Status { get; set; }
         public int Status { get; set; } // Map to ItemStatus enum value (0: Lost, 1: Found, 2: Claimed)
-                                            // Add other properties as needed
+        public string? ClaimedBy { get; set; }
     }
 }

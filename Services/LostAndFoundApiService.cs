@@ -274,8 +274,6 @@ namespace LostAndFoundWebUi.Services
                 // Step 3: Send the POST request with an empty body (since data is in the URL)
 
                 var response = await _httpClient.PostAsync(requestUri, new StringContent(string.Empty));
-                //var response = await _httpClient.PostAsJsonAsync("Item/report-found-item", request);
-                //var response = await _httpClient.PostAsJsonAsync("api/Item/report-found-item", request);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -308,15 +306,12 @@ namespace LostAndFoundWebUi.Services
                     { "Reason", request.Reason }
                 };
 
-                // This correctly URL-encodes the parameters
                 var queryString = new FormUrlEncodedContent(queryParams).ReadAsStringAsync().Result;
 
-                // 2. Construct the full request URI with the query string
-                // Base route: api/Claim/create-claim
-                var requestUri = $"api/Claim/create-claim?{queryString}";
+                // 2. Construct the request
+                var requestUri = $"Claim/create-claim?{queryString}";
 
-                // 3. Send the POST request with the data in the URL and an empty body.
-                // PostAsync is used instead of PostAsJsonAsync since we are sending data via the URL.
+                // Step 3: Send the POST request with an empty body (since data is in the URL)
                 var response = await _httpClient.PostAsync(requestUri, new StringContent(string.Empty));
 
                 if (response.IsSuccessStatusCode)
