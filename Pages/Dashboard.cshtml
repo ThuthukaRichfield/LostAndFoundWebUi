@@ -104,11 +104,7 @@
             </small>
 
             <div class="item-actions">
-                @if (isMyItem)
-                {
-                    <button class="edit-btn">Edit/View Status</button>
-                }
-                else if (isLost || isFound)
+                @if ( isFound)
                 {
                     <button class="claim-btn" onclick="location.href='@claimUrl'">Claim Item</button>
                 }

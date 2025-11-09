@@ -21,10 +21,28 @@ namespace LostAndFoundWebUi.Pages
         // 🌟 PROPERTY TO HOLD ALL ITEMS (full list)
         public List<ItemDto> AllItems { get; set; } = new List<ItemDto>();
 
-        // 🌟 NEW: Property to hold Pending Claims subset for clarity
-        // A pending claim is an Item that is Found (Status=1) AND has a ClaimedBy user.
+        // 🌟 FIX: New calculated property for Found Items with NO claim
+        public List<ItemDto> UnclaimedFoundItems => AllItems
+            // Status 1 = Found
+            // ClaimedBy == null OR string.IsNullOrEmpty(item.ClaimedBy) = Not claimed
+            .Where(item => item.Status == 1 && string.IsNullOrEmpty(item.ClaimedBy))
+            .ToList();
+
+        // Property for Found Items WITH a claim (Pending Review)
         public List<ItemDto> PendingClaims => AllItems
+            // Status 1 = Found
+            // ClaimedBy != null and !string.IsNullOrEmpty(item.ClaimedBy) = Claim submitted
             .Where(item => item.Status == 1 && !string.IsNullOrEmpty(item.ClaimedBy))
+            .ToList();
+
+        // Property for Lost Items
+        public List<ItemDto> LostItems => AllItems
+            .Where(item => item.Status == 0)
+            .ToList();
+
+        // Property for Resolved (Claimed) Items
+        public List<ItemDto> ClaimedItems => AllItems
+            .Where(item => item.Status == 2)
             .ToList();
 
 

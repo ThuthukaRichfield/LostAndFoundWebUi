@@ -114,9 +114,9 @@
                         {
                             <button class="btn-review-claim" onclick="viewClaims('@item.ItemId', '@item.Title')">Review Claim</button>
                         }
-                        else
+                        else if (isClaimed)
                         {
-                            <button class="btn-view-details" onclick="viewItemDetails('@item.ItemId')">View Details</button>
+                            <button class="btn-view-details" onclick="viewSuccessfulClaim('@item.ItemId')">View Resolution</button>
                         }
                     </div>
                 </div>
@@ -146,7 +146,7 @@
                         <p><strong>Report Date:</strong> @claimItem.CreatedDate.ToShortDateString()</p>
                     </div>
                     <div class="timeline-actions">
-                        <button class="btn-review-claim" onclick="reviewClaim('@claimItem.ItemId', '@claimItem.Title')">Review Claim</button>
+                        <button class="btn-review-claim" onclick="reviewClaim('@claimItem.ItemId', '@claimItem.Title')">Manage Claims</button>
                     </div>
                 </div>
             </div>
@@ -434,43 +434,45 @@
 
 <script>
     // Filter items based on selection
-    function filterItems() {
+        function filterItems() {
         const activeFilter = document.querySelector('.filter-link.active').getAttribute('data-filter');
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
         const items = document.querySelectorAll('.timeline-item');
 
         items.forEach(item => {
-            // Check for the main item type
             const itemType = item.getAttribute('data-type'); // 'lost' or 'found'
-            // Check for the special claims item class
+            const itemStatus = item.getAttribute('data-status'); // 'searching', 'unclaimed', 'pending', 'approved'
             const isClaimPendingItem = item.classList.contains('claim-pending-item');
-
             const itemText = item.textContent.toLowerCase();
 
             let shouldShow = false;
 
-            // Apply filter logic
+            // 🌟 Apply filter logic (Updated for 'found' and 'claims')
             switch (activeFilter) {
                 case 'all':
-                    // Show all standard items, hide the redundant claim-specific items
-                    shouldShow = (itemType === 'lost' || itemType === 'found') && !isClaimPendingItem;
+                    // Show all standard items (not the duplicate claim-specific entries)
+                    shouldShow = !isClaimPendingItem;
                     break;
                 case 'lost':
+                    // Show standard items that are 'lost' (status: 0)
                     shouldShow = itemType === 'lost' && !isClaimPendingItem;
                     break;
                 case 'found':
-                    shouldShow = itemType === 'found' && !isClaimPendingItem;
+                    // 🌟 FIX: Only show Found items that are 'unclaimed' (status: 1 AND ClaimedBy is null)
+                    shouldShow = itemType === 'found' && itemStatus === 'unclaimed' && !isClaimPendingItem;
                     break;
                 case 'claims':
-                    // Only show the claims-specific items (which display the summary)
+                    // 🌟 FIX: Only show the claims-specific items (which are 'pending' review)
                     shouldShow = isClaimPendingItem;
                     break;
-                // 'reports' and 'stats' links navigate, so they don't affect this filtering
+                case 'resolved':
+                    // Show resolved items (Status: 2)
+                    shouldShow = itemStatus === 'approved' && !isClaimPendingItem;
+                    break;
             }
 
             // Apply search filter
             if (shouldShow && searchTerm) {
-                // If it is a claim item, search its content. If it's a standard item, search its content.
                 shouldShow = itemText.includes(searchTerm);
             }
 
