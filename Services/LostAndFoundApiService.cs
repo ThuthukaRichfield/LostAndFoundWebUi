@@ -37,12 +37,39 @@ namespace LostAndFoundWebUi.Services
         public class LoginResponse
         {
             public string Token { get; set; } = string.Empty;
-            // Include any other relevant data from your API response here
             public string Role { get; set; } = string.Empty;
             public string DisplayName { get; set; } = string.Empty;
         }
 
         // New model for registration request data (to be sent to the API)
+        public class ApiUserDetail
+        {
+            // Note: The API response shows 'role' as an integer (0 for Admin, 1 for User).
+            public int Role { get; set; }
+            public string Name { get; set; } = string.Empty;
+            public string Email { get; set; } = string.Empty;
+        }
+
+        // 🌟 NEW MODEL: Represents the structure holding the user details
+        public class ApiUserWrapper
+        {
+            public ApiUserDetail? Result { get; set; }
+        }
+
+        // 🌟 NEW MODEL: Represents the ReturnObject from the API
+        public class ApiReturnObject
+        {
+            public string Token { get; set; } = string.Empty;
+            public ApiUserWrapper? User { get; set; }
+        }
+
+        // 🌟 NEW MODEL: The top-level response from the API
+        public class ApiLoginResponse
+        {
+            public bool Status { get; set; }
+            public ApiReturnObject? ReturnObject { get; set; }
+        }
+
         public class RegisterRequest1
         {
             public string Email { get; set; }
@@ -106,15 +133,31 @@ namespace LostAndFoundWebUi.Services
 
             try
             {
-                // Assuming the login endpoint is at: /api/Auth/login
                 var response = await _httpClient.PostAsync("Auth/login", content);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    // Deserialize the response object from the API
-                    var loginResponse = JsonSerializer.Deserialize<LoginResponse>(responseBody, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    return loginResponse;
+
+                    // 🌟 Use the new top-level API response model
+                    var apiResponse = JsonSerializer.Deserialize<ApiLoginResponse>(responseBody, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                    var token = apiResponse?.ReturnObject?.Token;
+                    var userDetails = apiResponse?.ReturnObject?.User?.Result;
+
+                    if (!string.IsNullOrEmpty(token) && userDetails != null)
+                    {
+                        // Map the nested API data to the simple LoginResponse model used by the UI
+                        return new LoginResponse
+                        {
+                            Token = token,
+                            // Map the Role integer (0/1) to a readable string ("Admin"/"User")
+                            Role = userDetails.Role == 0 ? "Admin" : "User",
+                            DisplayName = userDetails.Name // Use Name as DisplayName
+                        };
+                    }
+                    // If API succeeded but response structure was missing token/user details
+                    return null;
                 }
 
                 // If login failed (e.g., 401 Unauthorized/Bad Request)
