@@ -6,19 +6,21 @@
 
 <div class="container">
     <h1>Admin Dashboard</h1>
-    
+
     <!-- Welcome Message -->
-    <div style="background: #e0f2fe; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #1e3a8a;">
+    <div
+        style="background: #e0f2fe; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #1e3a8a;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
                 <h2 style="margin: 0; color: #1e3a8a;">Welcome, @Model.DisplayName!</h2>
                 <p style="margin: 5px 0 0 0; color: #475569;">
-                    Role: <strong>@Model.UserRole</strong> | 
+                    Role: <strong>@Model.UserRole</strong> |
                     Email: @Model.Username
                 </p>
             </div>
             <div>
-                <a href="/Logout" style="background: #ef4444; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none;">Logout</a>
+                <a href="/Logout"
+                   style="background: #ef4444; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none;">Logout</a>
             </div>
         </div>
     </div>
@@ -29,14 +31,16 @@
         <a href="#" class="filter-link" data-filter="lost">Lost Items</a> |
         <a href="#" class="filter-link" data-filter="found">Found Items</a> |
         <a href="#" class="filter-link" data-filter="claims">Pending Claims</a> |
-        <a href="https://reportspage.streamlit.app/" target="_blank" class="filter-link" data-filter="reports">Reports</a> |
+        <a href="https://reportspage.streamlit.app/" target="_blank" class="filter-link"
+           data-filter="reports">Reports</a> |
         <a href="https://statpage.streamlit.app/" target="_blank" class="filter-link" data-filter="stats">Stats</a>
     </div>
 
     <div class="search-container">
         <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Search items, claimants, or locations..." class="search-input" id="searchInput">
+            <input type="text" placeholder="Search items, claimants, or locations..." class="search-input"
+                   id="searchInput">
             <button class="search-btn" onclick="filterItems()">Search</button>
         </div>
     </div>
@@ -45,7 +49,8 @@
 
         @if (!Model.AllItems.Any())
         {
-            <p style="text-align: center; color: #999; padding: 40px; background: #fff; border-radius: 8px;">No items found in the system yet.</p>
+            <p style="text-align: center; color: #999; padding: 40px; background: #fff; border-radius: 8px;">No items
+                found in the system yet.</p>
         }
 
         @* --------------------------------------------------------------------- *
@@ -100,11 +105,13 @@
                         <span class="meta-item"><strong>ID:</strong> @item.ItemId</span>
                         <span class="meta-item"><strong>Category:</strong> @item.Category</span>
                         <span class="meta-item"><strong>Reported by:</strong> @item.CreatedBy</span>
-                        <span class="meta-item"><strong>Last Modified by:</strong> @(item.LastModifiedBy ?? "N/A")</span>
+                        <span
+                            class="meta-item"><strong>Last Modified by:</strong> @(item.LastModifiedBy ?? "N/A")</span>
 
                         @if (!string.IsNullOrEmpty(item.ClaimedBy))
                         {
-                            <span class="meta-item" style="font-weight: bold; color: @(isClaimed ? "#065f46" : "#d97706");">
+                            <span class="meta-item"
+                                  style="font-weight: bold; color: @(isClaimed ? "#065f46" : "#d97706");">
                                 <strong>Claimed by:</strong> @item.ClaimedBy
                             </span>
                         }
@@ -112,11 +119,15 @@
                     <div class="timeline-actions">
                         @if (isFound && !isClaimed && !string.IsNullOrEmpty(item.ClaimedBy))
                         {
-                            <button class="btn-review-claim" onclick="viewClaims('@item.ItemId', '@item.Title')">Review Claim</button>
+                            <button class="btn-review-claim" onclick="viewClaims('@item.ItemId', '@item.Title')">Review
+                                Claim
+                            </button>
                         }
                         else if (isClaimed)
                         {
-                            <button class="btn-view-details" onclick="viewSuccessfulClaim('@item.ItemId')">View Resolution</button>
+                            <button class="btn-view-details" onclick="viewSuccessfulClaim('@item.ItemId')">View
+                                Resolution
+                            </button>
                         }
                     </div>
                 </div>
@@ -146,22 +157,23 @@
                         <p><strong>Report Date:</strong> @claimItem.CreatedDate.ToShortDateString()</p>
                     </div>
                     <div class="timeline-actions">
-                        <button class="btn-review-claim" onclick="reviewClaim('@claimItem.ItemId', '@claimItem.Title')">Manage Claims</button>
+                        <button class="btn-review-claim" onclick="reviewClaim('@claimItem.ItemId', '@claimItem.Title')">
+                            Manage Claims
+                        </button>
                     </div>
                 </div>
             </div>
         }
     </div>
 
-        <div class="pagination">
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>4</button>
-        </div>
+    <div class="pagination">
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
     </div>
-    }
 </div>
+}
 
 <style>
     .container {
@@ -176,7 +188,7 @@
         padding: 15px;
         background: white;
         border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .filter-link {
@@ -208,7 +220,7 @@
         padding: 5px 15px;
         background: white;
         max-width: 500px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .search-icon {
@@ -250,12 +262,12 @@
         background: white;
         border-radius: 10px;
         padding: 20px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
     }
 
     .timeline-item:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         transform: translateY(-2px);
     }
 
@@ -434,7 +446,7 @@
 
 <script>
     // Filter items based on selection
-        function filterItems() {
+    function filterItems() {
         const activeFilter = document.querySelector('.filter-link.active').getAttribute('data-filter');
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
         const items = document.querySelectorAll('.timeline-item');
@@ -500,32 +512,33 @@
         alert(`Showing resolution details for item #${itemId}`);
         // window.location.href = `/ItemResolution?itemId=${itemId}`;
     }
+
     function viewItemDetails(itemId) {
         alert(`Showing full details for item #${itemId}`);
         // window.location.href = `/ItemDetails?itemId=${itemId}`;
     }
 
     // Initialize filter links
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const filterLinks = document.querySelectorAll('.filter-link');
-        
+
         filterLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', function (e) {
                 // Don't prevent default for reports link since it should navigate
                 if (this.getAttribute('data-filter') !== 'reports') {
                     e.preventDefault();
                 }
-                
+
                 // Remove active class from all links
                 filterLinks.forEach(l => l.classList.remove('active'));
-                
+
                 // Add active class to clicked link
                 this.classList.add('active');
-                
+
                 // Reset search placeholder for non-reports filters
                 if (this.getAttribute('data-filter') !== 'reports') {
                     document.getElementById('searchInput').placeholder = 'Search all items...';
-                    
+
                     // Apply filter
                     filterItems();
                 }
@@ -537,7 +550,7 @@
         if (searchInput) {
             searchInput.addEventListener('input', filterItems);
         }
-        
+
         // Apply initial filter
         filterItems();
     });
