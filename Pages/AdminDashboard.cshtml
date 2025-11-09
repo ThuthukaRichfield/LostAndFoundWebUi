@@ -41,170 +41,126 @@
         </div>
     </div>
 
-    <!-- Items Container -->
     <div class="items-timeline" id="itemsContainer">
-        <!-- Lost Items -->
-        <div class="timeline-item" data-type="lost" data-status="active">
-            <div class="timeline-marker lost"></div>
-            <div class="timeline-content">
-                <div class="item-header">
-                    <h4>Blue Baseball Cap</h4>
-                    <span class="status-badge searching">Searching</span>
-                </div>
-                <p><strong>Location:</strong> Library • <strong>Date:</strong> Jan 15, 2024</p>
-                <p><strong>Description:</strong> Blue cap with school logo, found near study tables</p>
-                <div class="item-meta">
-                    <span class="meta-item"><strong>Category:</strong> Clothing</span>
-                    <span class="meta-item"><strong>Reported by:</strong> John Smith</span>
-                    <span class="meta-item"><strong>Contact:</strong> john@school.edu</span>
-                </div>
-                <div class="timeline-actions">
-                    <button class="btn-view-claims" onclick="viewClaims(1, 'Blue Baseball Cap')">View Claims (2)</button>
-                </div>
-            </div>
-        </div>
 
-        <div class="timeline-item" data-type="lost" data-status="active">
-            <div class="timeline-marker lost"></div>
-            <div class="timeline-content">
-                <div class="item-header">
-                    <h4>Red Jacket</h4>
-                    <span class="status-badge searching">Searching</span>
-                </div>
-                <p><strong>Location:</strong> Parking Lot • <strong>Date:</strong> Jan 14, 2024</p>
-                <p><strong>Description:</strong> Red winter jacket, size medium</p>
-                <div class="item-meta">
-                    <span class="meta-item"><strong>Category:</strong> Clothing</span>
-                    <span class="meta-item"><strong>Reported by:</strong> Sarah Johnson</span>
-                    <span class="meta-item"><strong>Contact:</strong> sarah@school.edu</span>
-                </div>
-                <div class="timeline-actions">
-                    <button class="btn-view-claims" onclick="viewClaims(3, 'Red Jacket')">View Claims (1)</button>
-                </div>
-            </div>
-        </div>
+        @if (!Model.AllItems.Any())
+        {
+            <p style="text-align: center; color: #999; padding: 40px; background: #fff; border-radius: 8px;">No items found in the system yet.</p>
+        }
 
-        <!-- Found Items -->
-        <div class="timeline-item" data-type="found" data-status="active">
-            <div class="timeline-marker found"></div>
-            <div class="timeline-content">
-                <div class="item-header">
-                    <h4>Chemistry Textbook</h4>
-                    <span class="status-badge unclaimed">Unclaimed</span>
-                </div>
-                <p><strong>Location:</strong> Cafeteria • <strong>Date:</strong> Jan 14, 2024</p>
-                <p><strong>Description:</strong> "Chemistry 101" textbook, slightly worn cover</p>
-                <div class="item-meta">
-                    <span class="meta-item"><strong>Category:</strong> Books</span>
-                    <span class="meta-item"><strong>Found by:</strong> Mike Davis</span>
-                    <span class="meta-item"><strong>Contact:</strong> mike@school.edu</span>
-                    <span class="meta-item"><strong>Storage:</strong> Library Lost & Found</span>
-                </div>
-                <div class="timeline-actions">
-                    <button class="btn-view-claims" onclick="viewClaims(2, 'Chemistry Textbook')">View Claims (1)</button>
-                </div>
-            </div>
-        </div>
+        @* --------------------------------------------------------------------- *
+         * RENDER ALL ITEMS (LOST, FOUND, CLAIMED) - USED FOR 'ALL', 'LOST', 'FOUND' FILTERS
+         * --------------------------------------------------------------------- *@
+        @foreach (var item in Model.AllItems)
+        {
+            var isLost = item.Status == 0;
+            var isFound = item.Status == 1;
+            var isClaimed = item.Status == 2;
 
-        <div class="timeline-item" data-type="found" data-status="resolved">
-            <div class="timeline-marker found"></div>
-            <div class="timeline-content">
-                <div class="item-header">
-                    <h4>Water Bottle</h4>
-                    <span class="status-badge returned">Returned</span>
-                </div>
-                <p><strong>Location:</strong> Gym • <strong>Date:</strong> Jan 13, 2024</p>
-                <p><strong>Description:</strong> Metal water bottle, green color, school logo</p>
-                <div class="item-meta">
-                    <span class="meta-item"><strong>Category:</strong> Personal Items</span>
-                    <span class="meta-item"><strong>Found by:</strong> Emily Wilson</span>
-                    <span class="meta-item"><strong>Returned to:</strong> Tom Brown</span>
-                    <span class="meta-item"><strong>Return Date:</strong> Jan 16, 2024</span>
-                </div>
-                <div class="timeline-actions">
-                    <button class="btn-view-details" onclick="viewItemDetails(4)">View Details</button>
-                </div>
-            </div>
-        </div>
+            var itemType = isLost ? "lost" : "found";
+            var itemMarkerClass = isLost ? "lost" : (isClaimed ? "approved" : "found");
 
-        <!-- Claim Items (for Claims filter) -->
-        <div class="timeline-item claim-item" data-type="claim" data-status="pending" data-item-id="1">
-            <div class="timeline-marker claim"></div>
-            <div class="timeline-content">
-                <div class="item-header">
-                    <h4>Claim for Blue Baseball Cap</h4>
-                    <span class="status-badge pending">Pending</span>
-                </div>
-                <p><strong>Claimant:</strong> Alice Johnson • <strong>Submitted:</strong> Jan 16, 2024</p>
-                <p><strong>Item:</strong> Blue Baseball Cap (Lost Item #1)</p>
-                <div class="claim-details">
-                    <p><strong>Proof of Ownership:</strong> Provided photo with item</p>
-                    <p><strong>Description Match:</strong> 95%</p>
-                </div>
-                <div class="timeline-actions">
-                    <button class="btn-review-claim" onclick="reviewClaim(101, 1)">Review Claim</button>
-                </div>
-            </div>
-        </div>
+            var statusBadgeText = "";
+            var statusBadgeClass = "";
 
-        <div class="timeline-item claim-item" data-type="claim" data-status="pending" data-item-id="2">
-            <div class="timeline-marker claim"></div>
-            <div class="timeline-content">
-                <div class="item-header">
-                    <h4>Claim for Chemistry Textbook</h4>
-                    <span class="status-badge pending">Pending</span>
-                </div>
-                <p><strong>Claimant:</strong> Bob Smith • <strong>Submitted:</strong> Jan 15, 2024</p>
-                <p><strong>Item:</strong> Chemistry Textbook (Found Item #2)</p>
-                <div class="claim-details">
-                    <p><strong>Proof of Ownership:</strong> Student ID and purchase receipt</p>
-                    <p><strong>Description Match:</strong> 100%</p>
-                </div>
-                <div class="timeline-actions">
-                    <button class="btn-review-claim" onclick="reviewClaim(102, 2)">Review Claim</button>
-                </div>
-            </div>
-        </div>
+            if (isClaimed)
+            {
+                statusBadgeText = "RETURNED/RESOLVED";
+                statusBadgeClass = "returned";
+            }
+            else if (isFound)
+            {
+                statusBadgeText = string.IsNullOrEmpty(item.ClaimedBy) ? "Unclaimed" : "Claim Pending";
+                statusBadgeClass = string.IsNullOrEmpty(item.ClaimedBy) ? "unclaimed" : "pending";
+            }
+            else // isLost
+            {
+                statusBadgeText = "Searching";
+                statusBadgeClass = "searching";
+            }
 
-        <div class="timeline-item claim-item" data-type="claim" data-status="pending" data-item-id="3">
-            <div class="timeline-marker claim"></div>
-            <div class="timeline-content">
-                <div class="item-header">
-                    <h4>Claim for Red Jacket</h4>
-                    <span class="status-badge pending">Pending</span>
-                </div>
-                <p><strong>Claimant:</strong> David Wilson • <strong>Submitted:</strong> Jan 17, 2024</p>
-                <p><strong>Item:</strong> Red Jacket (Lost Item #3)</p>
-                <div class="claim-details">
-                    <p><strong>Proof of Ownership:</strong> Provided purchase receipt</p>
-                    <p><strong>Description Match:</strong> 90%</p>
-                </div>
-                <div class="timeline-actions">
-                    <button class="btn-review-claim" onclick="reviewClaim(103, 3)">Review Claim</button>
-                </div>
-            </div>
-        </div>
+            <div class="timeline-item"
+                 data-type="@itemType"
+                 data-status="@statusBadgeClass"
+                 data-item-id="@item.ItemId"
+                 data-claimed-by="@(item.ClaimedBy ?? "none")">
 
-        <!-- Successful Claims -->
-        <div class="timeline-item claim-item" data-type="claim" data-status="approved" data-item-id="4">
-            <div class="timeline-marker approved"></div>
-            <div class="timeline-content">
-                <div class="item-header">
-                    <h4>✓ Approved: Water Bottle Claim</h4>
-                    <span class="status-badge approved">Approved</span>
-                </div>
-                <p><strong>Claimant:</strong> Tom Brown • <strong>Approved:</strong> Jan 16, 2024</p>
-                <p><strong>Item:</strong> Water Bottle (Found Item #4)</p>
-                <div class="claim-details">
-                    <p><strong>Approved by:</strong> @Model.DisplayName</p>
-                    <p><strong>Return Method:</strong> In-person pickup</p>
-                </div>
-                <div class="timeline-actions">
-                    <button class="btn-view-details" onclick="viewSuccessfulClaim(401)">View Complete Details</button>
+                <div class="timeline-marker @itemMarkerClass"></div>
+                <div class="timeline-content">
+                    <div class="item-header">
+                        <h4>@item.Title</h4>
+                        <span class="status-badge @statusBadgeClass">@statusBadgeText</span>
+                    </div>
+                    <p>
+                        <strong>Type:</strong> @(isLost ? "LOST" : (isFound ? "FOUND" : "RESOLVED"))
+                        • <strong>Location:</strong> @item.Location
+                        • <strong>Date:</strong> @item.CreatedDate.ToShortDateString()
+                    </p>
+                    <div class="item-meta">
+                        <span class="meta-item"><strong>ID:</strong> @item.ItemId</span>
+                        <span class="meta-item"><strong>Category:</strong> @item.Category</span>
+                        <span class="meta-item"><strong>Reported by:</strong> @item.CreatedBy</span>
+                        <span class="meta-item"><strong>Last Modified by:</strong> @(item.LastModifiedBy ?? "N/A")</span>
+
+                        @if (!string.IsNullOrEmpty(item.ClaimedBy))
+                        {
+                            <span class="meta-item" style="font-weight: bold; color: @(isClaimed ? "#065f46" : "#d97706");">
+                                <strong>Claimed by:</strong> @item.ClaimedBy
+                            </span>
+                        }
+                    </div>
+                    <div class="timeline-actions">
+                        @if (isFound && !isClaimed && !string.IsNullOrEmpty(item.ClaimedBy))
+                        {
+                            <button class="btn-review-claim" onclick="viewClaims('@item.ItemId', '@item.Title')">Review Claim</button>
+                        }
+                        else
+                        {
+                            <button class="btn-view-details" onclick="viewItemDetails('@item.ItemId')">View Details</button>
+                        }
+                    </div>
                 </div>
             </div>
+        }
+
+        @foreach (var claimItem in Model.PendingClaims)
+        {
+            // This is a duplicate item displayed with the claim-specific style
+            <div class="timeline-item claim-pending-item"
+                 data-type="claim"
+                 data-status="pending"
+                 data-item-id="@claimItem.ItemId"
+                 style="display: none;">
+                @* Initially hidden for the claims view *@
+
+                <div class="timeline-marker claim"></div>
+                <div class="timeline-content">
+                    <div class="item-header">
+                        <h4>Claim for @claimItem.Title</h4>
+                        <span class="status-badge pending">Pending Review</span>
+                    </div>
+                    <p><strong>Claimant:</strong> @claimItem.ClaimedBy • <strong>Item ID:</strong> @claimItem.ItemId</p>
+                    <p><strong>Original Reporter:</strong> @claimItem.CreatedBy</p>
+                    <div class="claim-details">
+                        <p><strong>Item Location:</strong> @claimItem.Location</p>
+                        <p><strong>Report Date:</strong> @claimItem.CreatedDate.ToShortDateString()</p>
+                    </div>
+                    <div class="timeline-actions">
+                        <button class="btn-review-claim" onclick="reviewClaim('@claimItem.ItemId', '@claimItem.Title')">Review Claim</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+        <div class="pagination">
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>4</button>
         </div>
     </div>
+    }
 </div>
 
 <style>
@@ -458,6 +414,22 @@
     .btn-view-details:hover {
         background: #059669;
     }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+    }
+
+    .pagination button {
+        background-color: #fde68a;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+    }
 </style>
 
 <script>
@@ -468,82 +440,66 @@
         const items = document.querySelectorAll('.timeline-item');
 
         items.forEach(item => {
-            const itemType = item.getAttribute('data-type');
+            // Check for the main item type
+            const itemType = item.getAttribute('data-type'); // 'lost' or 'found'
+            // Check for the special claims item class
+            const isClaimPendingItem = item.classList.contains('claim-pending-item');
+
             const itemText = item.textContent.toLowerCase();
-            
+
             let shouldShow = false;
-            
-            // Apply filter logic for admin
+
+            // Apply filter logic
             switch (activeFilter) {
                 case 'all':
-                    shouldShow = true;
+                    // Show all standard items, hide the redundant claim-specific items
+                    shouldShow = (itemType === 'lost' || itemType === 'found') && !isClaimPendingItem;
                     break;
                 case 'lost':
-                    shouldShow = itemType === 'lost';
+                    shouldShow = itemType === 'lost' && !isClaimPendingItem;
                     break;
                 case 'found':
-                    shouldShow = itemType === 'found';
+                    shouldShow = itemType === 'found' && !isClaimPendingItem;
                     break;
                 case 'claims':
-                    shouldShow = itemType === 'claim';
+                    // Only show the claims-specific items (which display the summary)
+                    shouldShow = isClaimPendingItem;
                     break;
-                case 'reports':
-                    // Reports will be handled by separate page
-                    shouldShow = false;
-                    break;
+                // 'reports' and 'stats' links navigate, so they don't affect this filtering
             }
-            
+
             // Apply search filter
             if (shouldShow && searchTerm) {
+                // If it is a claim item, search its content. If it's a standard item, search its content.
                 shouldShow = itemText.includes(searchTerm);
             }
-            
+
             // Show/hide item
             item.style.display = shouldShow ? 'flex' : 'none';
         });
     }
 
-    // View Claims function - filters to claims view and shows claims for specific item
+    // View Claims function - redirects for single claim review
     function viewClaims(itemId, itemName) {
-        // Set claims filter as active
-        document.querySelectorAll('.filter-link').forEach(link => link.classList.remove('active'));
-        document.querySelector('.filter-link[data-filter="claims"]').classList.add('active');
-        
-        // Filter to show only claims for this specific item
-        const items = document.querySelectorAll('.timeline-item');
-        items.forEach(item => {
-            const itemType = item.getAttribute('data-type');
-            const claimItemId = item.getAttribute('data-item-id');
-            
-            if (itemType === 'claim' && claimItemId == itemId) {
-                item.style.display = 'flex';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-        
-        // Update search placeholder to show we're filtering
-        document.getElementById('searchInput').placeholder = `Search in claims for ${itemName}...`;
-        document.getElementById('searchInput').value = '';
+        // This button on the main item now redirects to the AdminClaims page for the item.
+        alert(`Redirecting to review claims for item: ${itemName} (ID: ${itemId})`);
+        window.location.href = `/AdminClaims?itemId=${itemId}`;
     }
 
-    // Review Claim - redirect to claims review page
-    function reviewClaim(claimId, itemId) {
-        // In real application, this would redirect to the claim review page
-        window.location.href = `/AdminClaims?claimId=${claimId}&itemId=${itemId}`;
+    // Review Claim - redirects for single claim review (used by the claims-pending list)
+    function reviewClaim(itemId, itemName) {
+        // This is the dedicated button on the claim-pending list item
+        window.location.href = `/AdminClaims?itemId=${itemId}`;
     }
 
-    // View successful claims
-    function viewSuccessfulClaim(claimId) {
-        // In real application, this would show details of successful claim
-        alert(`Showing complete details for successfully processed claim #${claimId}`);
-        // window.location.href = `/ClaimDetails?claimId=${claimId}`;
+    // ... (rest of the JavaScript remains the same, but ensure viewSuccessfulClaim and viewItemDetails
+    // use the correct parameter if you changed them to accept only itemId) ...
+    function viewSuccessfulClaim(itemId) {
+        alert(`Showing resolution details for item #${itemId}`);
+        // window.location.href = `/ItemResolution?itemId=${itemId}`;
     }
-
-    // View item details
     function viewItemDetails(itemId) {
-        // In real application, this would show full item details
-        alert(`Showing complete details for item #${itemId}`);
+        alert(`Showing full details for item #${itemId}`);
         // window.location.href = `/ItemDetails?itemId=${itemId}`;
     }
 

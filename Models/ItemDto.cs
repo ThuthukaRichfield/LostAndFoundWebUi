@@ -12,5 +12,7 @@
         //public ItemStatus Status { get; set; }
         public int Status { get; set; } // Map to ItemStatus enum value (0: Lost, 1: Found, 2: Claimed)
         public string? ClaimedBy { get; set; }
+        public string Location { get; set; }
+        public string Description { get; set; }
     }
 }

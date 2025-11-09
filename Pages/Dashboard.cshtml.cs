@@ -41,7 +41,7 @@ namespace LostAndFoundWebUi.Pages
 
             // 3. **API Call to fetch all items** (Lost, Found, All)
             // Calling the unified GetItemsAsync method with no parameters to get all items.
-            AllItems = await _apiService.GetItemsAsync();
+            AllItems = await _apiService.GetLostItemsAsync();
 
             return Page();
         }
