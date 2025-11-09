@@ -43,11 +43,12 @@
 <div class="items" id="itemsContainer">
     @foreach (var item in Model.AllItems)
     {
-
         // ItemStatus: 0=Lost, 1=Found, 2=Claimed (Assuming from your ItemDto/API)
         var isLost = item.Status == 0;
         var isFound = item.Status == 1;
-        var isMyItem = item.CreatedBy == Model.Username;
+
+        // 🌟 CHANGE 1: Check CreatedBy OR LastModifiedBy
+        var isMyItem = item.CreatedBy == Model.Username || item.LastModifiedBy == Model.Username;
 
         var itemTypeClass = isLost ? "lost" : isFound ? "found" : "claimed";
         var myItemClass = isMyItem ? "my-item" : "";
@@ -58,7 +59,9 @@
 
         <div class="item @itemTypeClass @myItemClass"
              data-type="@itemTypeFilter"
-             data-user="@item.CreatedBy">
+             data-user="@item.CreatedBy"
+             data-modified-user="@item.LastModifiedBy">
+            @* 🌟 CHANGE 2: Add Last Modified User Data Attribute *@
 
             <strong>@(isLost ? "LOST" : "FOUND"): @item.Title</strong>
             <p>Category: @item.Category</p>
