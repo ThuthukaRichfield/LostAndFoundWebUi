@@ -122,11 +122,9 @@ namespace LostAndFoundWebUi.Services
             return null;
         }
 
-        /// <summary>
-        /// Authenticates the user against the API and returns the JWT token and user info.
-        /// </summary>
         public async Task<LoginResponse?> LoginAsync(string email, string password)
         {
+            // Build the request to be sent to the API
             var request = new LoginRequest { Email = email, Password = password };
             var json = JsonSerializer.Serialize(request);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -138,26 +136,27 @@ namespace LostAndFoundWebUi.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-
-                    // 🌟 Use the new top-level API response model
                     var apiResponse = JsonSerializer.Deserialize<ApiLoginResponse>(responseBody, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
+                    // Pull data from the reponse's ReturnObject
                     var token = apiResponse?.ReturnObject?.Token;
                     var userDetails = apiResponse?.ReturnObject?.User?.Result;
 
                     if (!string.IsNullOrEmpty(token) && userDetails != null)
                     {
-                        // Map the nested API data to the simple LoginResponse model used by the UI
+                        // Map API data to the simple LoginResponse model used by the UI
                         return new LoginResponse
                         {
                             Token = token,
                             // Map the Role integer (0/1) to a readable string ("Admin"/"User")
                             Role = userDetails.Role == 0 ? "Admin" : "User",
-                            DisplayName = userDetails.Name // Use Name as DisplayName
+                            DisplayName = userDetails.Name,
                         };
                     }
-                    // If API succeeded but response structure was missing token/user details
-                    return null;
+                    else
+                    {
+                        return null;
+                    }
                 }
 
                 // If login failed (e.g., 401 Unauthorized/Bad Request)
@@ -165,29 +164,29 @@ namespace LostAndFoundWebUi.Services
             }
             catch (Exception ex)
             {
-                // Log and handle network/connection errors gracefully
                 Console.WriteLine($"Error during API login: {ex.Message}");
                 return null;
             }
         }
 
+        // Gets all the items
         public async Task<List<ItemDto>> GetLostItemsAsync()
         {
-            // Use GetFromJsonAsync to fetch data and automatically deserialize the JSON 
-            // into a List of LostItemDto objects.
+            // Use GetFromJsonAsync to fetch data and automatically deserialize the JSON
             var items = await _httpClient.GetFromJsonAsync<List<ItemDto>>("item/get-lost-items");
 
             // Return the list (it might be null if the API call failed or returned no data)
             return items ?? new List<ItemDto>();
         }
 
+        // Gets the items filtered by a status or search term
         public async Task<List<ItemDto>> GetItemsAsync(int? status = null, string? searchTerm = null)
         {
+            // Query Params to send params via query rather than body
             var queryParams = new List<string>();
 
             if (status.HasValue)
             {
-                // The API query uses 'Status' parameter
                 queryParams.Add($"Status={status.Value}");
             }
 
@@ -200,7 +199,6 @@ namespace LostAndFoundWebUi.Services
             var queryString = string.Join("&", queryParams);
             var requestUri = $"Item/get-lost-items{(queryString.Length > 0 ? $"?{queryString}" : string.Empty)}";
 
-            // Assuming your API GetLostItems endpoint now supports the common GetItemsQuery
             try
             {
                 var items = await _httpClient.GetFromJsonAsync<List<ItemDto>>(requestUri);
@@ -208,7 +206,6 @@ namespace LostAndFoundWebUi.Services
             }
             catch (Exception ex)
             {
-                // Log the error
                 Console.WriteLine($"Error fetching items: {ex.Message}");
                 return new List<ItemDto>();
             }
@@ -218,7 +215,23 @@ namespace LostAndFoundWebUi.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("Item/report-lost-item", request);
+                // Step 1: Construct the query string from the request
+                var queryParams = new Dictionary<string, string>
+                {
+                    { "UserEmail", request.UserEmail },
+                    { "Title", request.Title },
+                    { "Category", request.Category },
+                    { "Description", request.Description },
+                    { "Location", request.Location },
+                };
+
+                var queryString = new FormUrlEncodedContent(queryParams).ReadAsStringAsync().Result;
+
+                // Step 2: Construct the full URL with the query string
+                var requestUri = $"Item/report-lost-item?{queryString}";
+
+                // Step 3: Send the POST request with an empty body (since data is in the URL)
+                var response = await _httpClient.PostAsync(requestUri, new StringContent(string.Empty));
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -243,8 +256,26 @@ namespace LostAndFoundWebUi.Services
         {
             try
             {
+                // Step 1: Construct the query string from the request
+                var queryParams = new Dictionary<string, string>
+                {
+                    { "UserEmail", request.UserEmail },
+                    { "Title", request.Title },
+                    { "Category", request.Category },
+                    { "Description", request.Description },
+                    { "Location", request.Location },
+                };
+
+                var queryString = new FormUrlEncodedContent(queryParams).ReadAsStringAsync().Result;
+
+                // Step 2: Construct the full URL with the query string
+                var requestUri = $"Item/report-found-item?{queryString}";
+
+                // Step 3: Send the POST request with an empty body (since data is in the URL)
+
+                var response = await _httpClient.PostAsync(requestUri, new StringContent(string.Empty));
                 //var response = await _httpClient.PostAsJsonAsync("Item/report-found-item", request);
-                var response = await _httpClient.PostAsJsonAsync("api/Item/report-found-item", request);
+                //var response = await _httpClient.PostAsJsonAsync("api/Item/report-found-item", request);
 
                 if (response.IsSuccessStatusCode)
                 {
