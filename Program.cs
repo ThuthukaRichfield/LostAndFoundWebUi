@@ -11,10 +11,9 @@ builder.Services.AddHttpClient<LostAndFoundApiService>(client =>
     // IMPORTANT: Replace the URL with the correct URL/port your API is running on.
     // For development, this is typically https://localhost:<PortNumber>
     // NOTE: Ensure you append the trailing slash for correct relative path resolution later (e.g., "Auth/login")
-    client.BaseAddress = new Uri("https://localhost:44377/api/"); // Local development
+    //client.BaseAddress = new Uri("https://localhost:44377/api/"); // Local development
 
-
-
+    client.BaseAddress = new Uri("https://lostandfoundapi-g3h5fdc0asdzhmf6.southafricanorth-01.azurewebsites.net/api/"); // production
 });
 
 builder.Services.AddDistributedMemoryCache();
