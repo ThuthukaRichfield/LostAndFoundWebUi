@@ -522,28 +522,27 @@
     document.addEventListener('DOMContentLoaded', function () {
         const filterLinks = document.querySelectorAll('.filter-link');
 
-        filterLinks.forEach(link => {
-            link.addEventListener('click', function (e) {
-                // Don't prevent default for reports link since it should navigate
-                if (this.getAttribute('data-filter') !== 'reports') {
-                    e.preventDefault();
-                }
+       filterLinks.forEach(link => {
+    link.addEventListener('click', function (e) {
+        // ✅ Allow both 'reports' and 'stats' links to open in new tab
+        if (this.getAttribute('data-filter') !== 'reports' && this.getAttribute('data-filter') !== 'stats') {
+            e.preventDefault();
+        }
 
-                // Remove active class from all links
-                filterLinks.forEach(l => l.classList.remove('active'));
+        // Remove active class from all links
+        filterLinks.forEach(l => l.classList.remove('active'));
 
-                // Add active class to clicked link
-                this.classList.add('active');
+        // Add active class to clicked link
+        this.classList.add('active');
 
-                // Reset search placeholder for non-reports filters
-                if (this.getAttribute('data-filter') !== 'reports') {
-                    document.getElementById('searchInput').placeholder = 'Search all items...';
+        // Apply filtering only for in-page filters
+        if (this.getAttribute('data-filter') !== 'reports' && this.getAttribute('data-filter') !== 'stats') {
+            document.getElementById('searchInput').placeholder = 'Search all items...';
+            filterItems();
+        }
+    });
+});
 
-                    // Apply filter
-                    filterItems();
-                }
-            });
-        });
 
         // Add search input event listener
         const searchInput = document.getElementById('searchInput');
