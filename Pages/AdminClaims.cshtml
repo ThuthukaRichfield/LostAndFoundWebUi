@@ -21,20 +21,16 @@
         {
             @foreach (var claim in Model.Claims)
             {
-                // NOTE: Since the API response doesn't include the claim status,
-                // we'll default to 'pending' for now. You'll need to update the
-                // ClaimDto and API if you want to use the status badge/filter properly.
-
-                <div class="claim-item pending" data-status="pending" data-type="lost">
+                <div class="claim-item pending" data-claim-id="@claim.ClaimId" data-status="pending" data-type="lost">
                     <div class="claim-header">
                         <h3>Claim #@claim.ClaimId (Item ID: @claim.ItemId)</h3>
                         <span class="status-badge pending">Pending</span>
                     </div>
+                    @* ... (Claim Details are unchanged) ... *@
                     <div class="claim-details">
                         <div class="detail-row">
                             <div class="detail-col">
                                 <strong>Claimant:</strong> @claim.CreatedBy<br>
-                                <strong>User ID:</strong> @claim.UserId<br>
                                 <strong>Submitted:</strong> @claim.CreatedDate.ToShortDateString()
                             </div>
                             <div class="detail-col">
@@ -45,15 +41,32 @@
                         <div class="claim-reason">
                             <strong>Claim Reason:</strong> @claim.Reason
                         </div>
-                        <div class="claim-evidence">
-                            <strong>Supporting Evidence:</strong> (Data not available in DTO)
-                        </div>
                     </div>
+
+                    @* -------------------------------------------------------------------- *
+                     * NEW: Form for managing claim status (Approve/Reject)
+                     * -------------------------------------------------------------------- *@
                     <div class="claim-actions">
-                        @* These buttons would eventually use AJAX or post to an OnPost handler *@
-                        <button class="btn-approve" onclick="updateClaimStatus(this, 'approved')">Approve</button>
-                        <button class="btn-reject" onclick="updateClaimStatus(this, 'rejected')">Reject</button>
-                        <button class="btn-view-details" onclick="viewClaimDetails(@claim.ClaimId)">View Details</button>
+                        <form method="post" asp-page-handler="ManageClaim">
+                            @* Hidden field to pass the ClaimId, necessary for the handler *@
+                            <input type="hidden" name="ClaimId" value="@claim.ClaimId" />
+
+                            <button class="btn-approve"
+                                    type="submit"
+                                    name="IsApproved"
+                                    value="true"
+                                    onclick="return confirm('Are you sure you want to approve Claim #@claim.ClaimId?');">
+                                Approve
+                            </button>
+
+                            <button class="btn-reject"
+                                    type="submit"
+                                    name="IsApproved"
+                                    value="false"
+                                    onclick="return confirm('Are you sure you want to reject Claim #@claim.ClaimId?');">
+                                Reject
+                            </button>
+                        </form>
                     </div>
                 </div>
             }
@@ -215,53 +228,3 @@
         font-weight: 500;
     }
 </style>
-
-<script>
-    function filterClaims() {
-        const statusFilter = document.getElementById('statusFilter').value;
-        const typeFilter = document.getElementById('typeFilter').value;
-        const claims = document.querySelectorAll('.claim-item');
-
-        claims.forEach(claim => {
-            const status = claim.getAttribute('data-status');
-            const type = claim.getAttribute('data-type');
-            
-            const statusMatch = statusFilter === 'all' || status === statusFilter;
-            const typeMatch = typeFilter === 'all' || type === typeFilter;
-            
-            if (statusMatch && typeMatch) {
-                claim.style.display = 'block';
-            } else {
-                claim.style.display = 'none';
-            }
-        });
-    }
-
-    function updateClaimStatus(button, newStatus) {
-        const claimItem = button.closest('.claim-item');
-        const statusBadge = claimItem.querySelector('.status-badge');
-        
-        // Update status badge
-        statusBadge.className = 'status-badge ' + newStatus;
-        statusBadge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-        
-        // Update data attribute
-        claimItem.setAttribute('data-status', newStatus);
-        
-        // Update border color
-        const colors = {
-            'pending': '#f59e0b',
-            'approved': '#10b981',
-            'rejected': '#ef4444'
-        };
-        claimItem.style.borderLeftColor = colors[newStatus];
-        
-        // Show confirmation
-        alert(`Claim ${newStatus} successfully!`);
-    }
-
-    function viewClaimDetails(claimId) {
-        // In a real app, this would navigate to a detailed view
-        alert(`Viewing details for claim #${claimId}`);
-    }
-</script>

@@ -12,10 +12,16 @@ namespace LostAndFoundWebUi.Pages
         [BindProperty(SupportsGet = true)]
         public int? ItemId { get; set; } // To receive the item ID from the URL
 
+        // Properties to receive the POST data from the form
+        [BindProperty]
+        public int ClaimId { get; set; }
+
+        [BindProperty]
+        public bool IsApproved { get; set; }
+        // ^ The name must match the 'name' attribute on the submit buttons
+
         public List<ClaimDto> Claims { get; set; } = new List<ClaimDto>();
 
-        // You'll need the Item's title/info to display at the top of the page
-        // You'd need another API call to get this or pass it via route/session
         public string ItemTitle { get; set; } = "Selected Item";
 
         public AdminClaimsModel(LostAndFoundApiService apiService)
@@ -25,23 +31,38 @@ namespace LostAndFoundWebUi.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            // If ItemId is null, perhaps redirect or show a list of items to select from
             if (!ItemId.HasValue || ItemId.Value <= 0)
             {
-                // This assumes you have a page to view all items, e.g., AdminItems
-                // For now, let's stop and show an error or empty list.
                 return Page();
             }
 
-            // 1. Fetch claims for the specific ItemId
             Claims = await _apiService.GetClaimsByItemAsync(ItemId.Value);
-
-            // 2. (Optional, but recommended) Fetch item details if needed for the title/header
-            // ItemTitle = await _apiService.GetItemTitleAsync(ItemId.Value); 
-
             return Page();
         }
 
-        // ... (Add OnPost methods for Approve/Reject here later) ...
+        public async Task<IActionResult> OnPostManageClaimAsync()
+        {
+            if (ClaimId <= 0)
+            {
+                // Should not happen if the hidden field is set correctly
+                TempData["ErrorMessage"] = "Invalid Claim ID received.";
+                return RedirectToPage(new { ItemId = ItemId });
+            }
+
+            // Call the service method to update the status via the API
+            bool success = await _apiService.ManageClaimStatusAsync(ClaimId, IsApproved);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = $"Claim #{ClaimId} successfully {(IsApproved ? "approved" : "rejected")}.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = $"Failed to {(IsApproved ? "approve" : "reject")} Claim #{ClaimId}. Please check the API log.";
+            }
+
+            // Redirect back to the dashboard
+            return RedirectToPage("AdminDashboard");
+        }
     }
 }

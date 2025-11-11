@@ -348,5 +348,35 @@ namespace LostAndFoundWebUi.Services
                 return new List<ClaimDto>();
             }
         }
+
+        public async Task<bool> ManageClaimStatusAsync(int claimId, bool isApproved)
+        {
+            // 1. Build the query parameters string
+            var queryParams = new Dictionary<string, string>
+                {
+                    { "ClaimId", claimId.ToString() },
+                    { "IsApproved", isApproved.ToString() },
+                };
+
+            var queryString = new FormUrlEncodedContent(queryParams).ReadAsStringAsync().Result;
+
+            // 2. Construct the request
+            var requestUri = $"Claim/manage-claim?{queryString}";
+
+            // Step 3: Send the POST request with an empty body (since data is in the URL)
+            var response = await _httpClient.PostAsync(requestUri, new StringContent(string.Empty));
+
+            // Handle the API response
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+
+            // Log the failure details
+            var error = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"API Error managing Claim #{claimId}: {error}"); // Added console logging
+
+            return false;
+        }
     }
 }
