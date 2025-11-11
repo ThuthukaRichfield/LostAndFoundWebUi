@@ -10,15 +10,13 @@ namespace LostAndFoundWebUi.Pages
         private readonly LostAndFoundApiService _apiService;
 
         [BindProperty(SupportsGet = true)]
-        public int? ItemId { get; set; } // To receive the item ID from the URL
+        public int? ItemId { get; set; }
 
-        // Properties to receive the POST data from the form
         [BindProperty]
         public int ClaimId { get; set; }
 
         [BindProperty]
         public bool IsApproved { get; set; }
-        // ^ The name must match the 'name' attribute on the submit buttons
 
         public List<ClaimDto> Claims { get; set; } = new List<ClaimDto>();
 
@@ -42,14 +40,14 @@ namespace LostAndFoundWebUi.Pages
 
         public async Task<IActionResult> OnPostManageClaimAsync()
         {
+            // Should not happen if the hidden field is set correctly
             if (ClaimId <= 0)
             {
-                // Should not happen if the hidden field is set correctly
                 TempData["ErrorMessage"] = "Invalid Claim ID received.";
                 return RedirectToPage(new { ItemId = ItemId });
             }
 
-            // Call the service method to update the status via the API
+            // Call the service method
             bool success = await _apiService.ManageClaimStatusAsync(ClaimId, IsApproved);
 
             if (success)

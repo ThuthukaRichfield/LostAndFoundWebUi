@@ -10,13 +10,10 @@ namespace LostAndFoundWebUi.Pages
     {
         private readonly LostAndFoundApiService _apiService;
 
-        // Ctor: Inject the API Service
         public ReportFoundModel(LostAndFoundApiService apiService)
         {
             _apiService = apiService;
         }
-
-        // --- View Properties (BindProperty for form) ---
 
         [BindProperty]
         [Required]
@@ -46,14 +43,7 @@ namespace LostAndFoundWebUi.Pages
         public string SuccessMessage { get; set; } = string.Empty;
         public string ErrorMessage { get; set; } = string.Empty;
 
-        // --- Handlers ---
-
-        public void OnGet()
-        {
-            // Check authentication if needed, otherwise just return Page
-        }
-
-        public async Task<IActionResult> OnPostAsync() // Changed to Async
+        public async Task<IActionResult> OnPostAsync()
         {
             // 1. Basic Model Validation
             if (!ModelState.IsValid)
@@ -69,7 +59,6 @@ namespace LostAndFoundWebUi.Pages
                 return Page();
             }
 
-            // 3. Map form data to the API request DTO
             var request = new ReportLostItemRequest
             {
                 UserEmail = userEmail,
@@ -77,18 +66,23 @@ namespace LostAndFoundWebUi.Pages
                 Category = Category,
                 Location = Location,
                 Description = Description,
-                // Note: ImageFile is not sent in the current API model. 
-                // To support images, you'd need to convert IFormFile to byte[] and update the DTO/API command.
             };
 
-            // 4. Call the API
             var result = await _apiService.ReportFoundItemAsync(request);
 
-            // 5. Handle the API result
             if (result.Status)
             {
+                var userRole = HttpContext.Session.GetString("UserRole");
+
                 TempData["SuccessMessage"] = "Lost item reported successfully!";
-                return RedirectToPage("/Dashboard");
+                if (userRole == "Admin")
+                {
+                    return RedirectToPage("AdminDashboard");
+                }
+                else
+                {
+                    return RedirectToPage("/Dashboard");
+                }
             }
             else
             {

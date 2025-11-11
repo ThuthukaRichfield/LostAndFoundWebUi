@@ -35,7 +35,6 @@ namespace LostAndFoundWebUi.Pages
         [Required(ErrorMessage = "You must provide a reason for claiming this item.")]
         public string ClaimReason { get; set; } = string.Empty;
 
-        // --- Feedback Properties ---
         public string ErrorMessage { get; set; } = string.Empty;
 
         public void OnGet()
@@ -48,14 +47,13 @@ namespace LostAndFoundWebUi.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // 1. Basic Model Validation
+            // Basic Model Validation
             if (!ModelState.IsValid)
             {
-                // This should now only fail if ItemId or ClaimReason is missing
                 return Page();
             }
 
-            // 2. Get the current user's email from session
+            // Get the current user's email from session
             var userEmail = HttpContext.Session.GetString("Username");
             if (string.IsNullOrEmpty(userEmail))
             {
@@ -63,7 +61,6 @@ namespace LostAndFoundWebUi.Pages
                 return Page();
             }
 
-            // 3. Map form data to the API request DTO
             var request = new CreateClaimRequest
             {
                 UserEmail = userEmail,
@@ -71,10 +68,8 @@ namespace LostAndFoundWebUi.Pages
                 Reason = ClaimReason
             };
 
-            // 4. Call the API
             var result = await _apiService.CreateClaimAsync(request);
 
-            // 5. Handle the API result
             if (result.Status)
             {
                 TempData["SuccessMessage"] = "Claim submitted successfully! The owner will be notified.";

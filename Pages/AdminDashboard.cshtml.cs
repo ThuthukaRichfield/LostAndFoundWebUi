@@ -18,29 +18,23 @@ namespace LostAndFoundWebUi.Pages
         public string Username { get; set; } = string.Empty;
         public string UserRole { get; set; } = "Admin";
 
-        // 🌟 PROPERTY TO HOLD ALL ITEMS (full list)
         public List<ItemDto> AllItems { get; set; } = new List<ItemDto>();
 
-        // 🌟 FIX: New calculated property for Found Items with NO claim
         public List<ItemDto> UnclaimedFoundItems => AllItems
-            // Status 1 = Found
-            // ClaimedBy == null OR string.IsNullOrEmpty(item.ClaimedBy) = Not claimed
             .Where(item => item.Status == 1 && string.IsNullOrEmpty(item.ClaimedBy))
             .ToList();
 
-        // Property for Found Items WITH a claim (Pending Review)
+        // Found Items WITH a claim (Pending Review)
         public List<ItemDto> PendingClaims => AllItems
-            // Status 1 = Found
-            // ClaimedBy != null and !string.IsNullOrEmpty(item.ClaimedBy) = Claim submitted
             .Where(item => item.Status == 1 && !string.IsNullOrEmpty(item.ClaimedBy))
             .ToList();
 
-        // Property for Lost Items
+        // Lost Items
         public List<ItemDto> LostItems => AllItems
             .Where(item => item.Status == 0)
             .ToList();
 
-        // Property for Resolved (Claimed) Items
+        // Resolved (Claimed) Items
         public List<ItemDto> ClaimedItems => AllItems
             .Where(item => item.Status == 2)
             .ToList();
@@ -52,7 +46,6 @@ namespace LostAndFoundWebUi.Pages
             Username = HttpContext.Session.GetString("Username") ?? "Unknown";
             DisplayName = HttpContext.Session.GetString("DisplayName") ?? "Administrator";
 
-            // Assuming _apiService.GetAllItemsAsync() is implemented and returns List<ItemDto>
             var allItems = await _apiService.GetLostItemsAsync();
 
             if (allItems != null)

@@ -12,7 +12,6 @@ namespace LostAndFoundWebUi.Pages
     {
         private readonly LostAndFoundApiService _apiService;
 
-        // Bind properties to the form inputs
         [BindProperty]
         [Required]
         [Display(Name = "Full Name")]
@@ -33,11 +32,6 @@ namespace LostAndFoundWebUi.Pages
             _apiService = apiService;
         }
 
-        public void OnGet()
-        {
-            // Optional: Clear session or check for existing authentication here
-        }
-
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -50,23 +44,18 @@ namespace LostAndFoundWebUi.Pages
                 Email = Email,
                 Password = Password,
                 Name = FullName,
-                // The UserRole property defaults to "User" in the RegisterRequest model
             };
 
-            // Call the API Registration Endpoint
             var loginResponse = await _apiService.RegisterAsync(request);
 
             if (loginResponse != null)
-                //if (loginResponse != null && !string.IsNullOrEmpty(loginResponse.Token))
             {
-                // SUCCESS: Registration succeeded, automatically log the user in via session
                 HttpContext.Session.SetString("JwtToken", loginResponse.Token);
                 HttpContext.Session.SetString("Username", Email);
                 HttpContext.Session.SetString("DisplayName", loginResponse.DisplayName);
                 HttpContext.Session.SetString("IsAuthenticated", "true");
                 HttpContext.Session.SetString("UserRole", loginResponse.Role);
 
-                // Redirect to the main Dashboard after successful registration/login
                 return RedirectToPage("/Dashboard");
             }
             else
