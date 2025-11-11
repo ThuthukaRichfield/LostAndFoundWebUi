@@ -330,5 +330,23 @@ namespace LostAndFoundWebUi.Services
                 return OperationStatus.CreateFromException("Network or serialization error occurred during claim creation.", ex);
             }
         }
+
+        public async Task<List<ClaimDto>> GetClaimsByItemAsync(int itemId)
+        {
+            // Construct the request URI with the ItemId query parameter
+            var requestUri = $"Claim/get-claims_by_item?ItemId={itemId}";
+
+            try
+            {
+                var claims = await _httpClient.GetFromJsonAsync<List<ClaimDto>>(requestUri);
+                return claims ?? new List<ClaimDto>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching claims for Item ID {itemId}: {ex.Message}");
+                // Return an empty list on failure to prevent application crash
+                return new List<ClaimDto>();
+            }
+        }
     }
 }
